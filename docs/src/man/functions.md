@@ -1,10 +1,17 @@
 # Functions
 
 ```@meta
-CurrentModule = MeshKeeper
+CurrentModule = MeshSteward
 ```
 
 ```@docs
+initbox
+updatebox!
+boundingbox
+inflatebox!
+inbox
+boxesoverlap
+intersectboxes
 load
 save
 increl
