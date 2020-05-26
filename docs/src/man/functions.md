@@ -12,6 +12,13 @@ inflatebox!
 inbox
 boxesoverlap
 intersectboxes
+eselect
+vselect
+import_MESH
+import_NASTRAN
+import_ABAQUS
+vtkwrite
+export_MESH
 load
 save
 increl
