@@ -3,13 +3,12 @@ using Statistics: mean
 using MeshCore: IncRel, indextype, nshapes, retrieve, attribute, nentities, nrelations
 
 """
-    selectelem(fens::FENodeSet, fes::T; kwargs...) where {T<:AbstractFESet}
+    eselect(ir::IncRel; kwargs...) 
 
 Select finite elements.
 
 # Arguments
-- `fens` = finite element node set
-- `fes` = finite element set
+- `ir` = incidence relation representing finite element set `(d, 0)`.
 - `kwargs` = keyword arguments to specify the selection criteria
 
 ## Selection criteria
@@ -73,11 +72,12 @@ l = selectelem(fens, fes, flood = true, startnode = 13)
 
 ### Optional keyword arguments
 Should we consider the element only if all its nodes are in?
-- `allin` = Boolean: if true, then all nodes of an element must satisfy
-the criterion; otherwise  one is enough.
+- `allin` = Boolean: if true, then all nodes of an element must satisfy the
+  criterion; otherwise  one is enough.
 
 # Output
-`felist` = list of finite elements from the set that satisfy the criteria
+- `felist` = list of finite elements (shapes) from the from the collection on
+  the left of the incidence relation that satisfy the criteria
 """
 function eselect(ir::IncRel; kwargs...) 
 
