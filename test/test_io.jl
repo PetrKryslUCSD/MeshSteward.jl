@@ -304,3 +304,33 @@ end
 using .mmeshio13
 mmeshio13.test()
 
+
+module mmeshio14
+using StaticArrays
+using MeshCore: nshapes, retrieve, nrelations
+using MeshCore: attribute, nrelations, boundary, VecAttrib
+using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
+using LinearAlgebra
+using Test
+function test()
+    connectivities = import_ABAQUS("block-w-hole.inp")
+    @test length(connectivities) == 1
+    connectivity = connectivities[1]
+    @test connectivity.left.name == "Q4"
+    @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (481, 430)
+    vertices = connectivity.right
+    geom = attribute(vertices, "geom")
+
+    vertices.attributes["dist"] = VecAttrib([norm(geom[i]) for i in 1:length(geom)])
+    vertices.attributes["x"] = VecAttrib([geom[i][1] for i in 1:length(geom)])
+    vertices.attributes["v"] = VecAttrib([[geom[i][2], -geom[i][1], 0.0] for i in 1:length(geom)])
+    
+    connectivity.left.attributes["invdist"] = VecAttrib([1.0/norm(sum(geom[retrieve(connectivity, i)])) for i in 1:nrelations(connectivity)])
+    vtkwrite("block-w-hole-mixed", connectivity, ["dist", "x", "invdist", "v"])
+    # try rm("block-w-hole-mixed" * ".vtu"); catch end
+    true
+end
+end
+using .mmeshio14
+mmeshio14.test()
+
