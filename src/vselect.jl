@@ -33,11 +33,7 @@ Find the node nearest to the location given.
 nh = selectnode(fens, nearestto = [R+Ro/2, 0.0, 0.0] )
 ```
 """
-# function selectnode(fens::FENodeSet; kwargs...)
-#     nodelist = vselect(fens.xyz; kwargs...)
-#     nodelist = dropdims(reshape(nodelist,1,length(nodelist)), dims=1);
-#     return nodelist
-# end
+
 
 
 function _box_outputlist!(outputlist::Vector{IT}, abox::BT, sdim::IT, v::VT) where {IT, BT, VT}
@@ -91,25 +87,46 @@ function _nearestto_outputlist!(outputlist::Vector{IT}, nearestto, sdim::IT, v::
 end
 
 """
-    vselect(v::FO; kwargs...) where {FO}
+    vselect(v::VT; kwargs...) where {VT}
 
 Select locations (vertices) based on some criterion.
 
-`FO` is the type of a function or an callable object that returns the
-coordinates of a vertex given its number.
+`VT` is an abstract array that returns the coordinates of a vertex given its
+number.
 
 ## Selection criteria
 
 ### box
 ```
-nLx = vselect(geom.co, box = [0.0 Lx  0.0 0.0 0.0 0.0], inflate = Lx/1.0e5)
+nLx = vselect(v, box = [0.0 Lx  0.0 0.0 0.0 0.0], inflate = Lx/1.0e5)
 ```
 
 The keyword 'inflate' may be used to increase or decrease the extent of
 the box (or the distance) to make sure some nodes which would be on the
 boundary are either excluded or included.
 
-Returns
+### distance
+```
+list = vselect(v, distance=1.0+0.1/2^nref, from=[0. 0.], inflate=tolerance);
+```
+
+### plane
+```
+candidates = vselect(v, plane = [0.0 0.0 1.0 0.0], thickness = h/1000)
+```
+The keyword `plane` defines the plane by its normal (the first two or
+three numbers) and its distance from the origin (the last number). Nodes
+are selected they lie on the plane,  or near the plane within the
+distance `thickness` from the plane. The normal is assumed to be of unit
+length, if it isn't provided as such, it will be normalized internally.
+
+### nearestto
+Find the node nearest to the location given.
+```
+nh = vselect(v, nearestto = [R+Ro/2, 0.0, 0.0])
+```
+
+# Returns
 The list of vertices that match the search criterion.
 """
 function vselect(v::VT; kwargs...) where {VT}

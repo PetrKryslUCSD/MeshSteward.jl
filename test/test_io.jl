@@ -297,7 +297,7 @@ function test()
     
     connectivity.left.attributes["invdist"] = VecAttrib([1.0/norm(sum(geom[retrieve(connectivity, i)])) for i in 1:nrelations(connectivity)])
     vtkwrite("block-w-hole-mixed", connectivity, ["dist", "x", "invdist"])
-    # try rm("block-w-hole-mixed" * ".vtu"); catch end
+    try rm("block-w-hole-mixed" * ".vtu"); catch end
     true
 end
 end
