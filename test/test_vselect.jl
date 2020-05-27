@@ -67,3 +67,98 @@ end
 end
 using .mt4topo1
 mt4topo1.test()
+
+module mt4topv1
+using StaticArrays
+using LinearAlgebra
+using MeshCore: P1, T4, ShapeColl,  manifdim, nvertices, nshapes, indextype
+using MeshCore: skeleton, retrieve, VecAttrib
+using MeshCore: IncRel, transpose, nrelations, nentities, boundary
+using MeshSteward: connectedv, vselect, vtkwrite
+using ..samplet4: samplet4mesh
+using Test
+function test()
+    xyz, cc = samplet4mesh()
+    # Construct the initial incidence relation
+    N, T = size(xyz, 2), eltype(xyz)
+    locs =  VecAttrib([SVector{N, T}(xyz[i, :]) for i in 1:size(xyz, 1)])
+    vrts = ShapeColl(P1, length(locs))
+    tets = ShapeColl(T4, size(cc, 1))
+    ir30 = IncRel(tets, vrts, cc)
+    ir30.right.attributes["geom"] = locs
+    outputlist = vselect(locs; distance = 0.3, from = locs[1], inflate = 0.001)
+    nmatched = 0
+    for i in 1:length(locs)
+        if norm(locs[i]) < 0.3 + 0.001
+            nmatched = nmatched + 1 
+        end
+    end
+    @test nmatched == length(outputlist)
+    vtkwrite("delete_me", ir30)
+    # try rm("delete_me" * ".vtu"); catch end
+    true
+end
+end
+using .mt4topv1
+mt4topv1.test()
+
+module mt4topv2
+using StaticArrays
+using LinearAlgebra
+using MeshCore: P1, T4, ShapeColl,  manifdim, nvertices, nshapes, indextype
+using MeshCore: skeleton, retrieve, VecAttrib
+using MeshCore: IncRel, transpose, nrelations, nentities, boundary
+using MeshSteward: connectedv, vselect, vtkwrite
+using ..samplet4: samplet4mesh
+using Test
+function test()
+    xyz, cc = samplet4mesh()
+    # Construct the initial incidence relation
+    N, T = size(xyz, 2), eltype(xyz)
+    locs =  VecAttrib([SVector{N, T}(xyz[i, :]) for i in 1:size(xyz, 1)])
+    vrts = ShapeColl(P1, length(locs))
+    tets = ShapeColl(T4, size(cc, 1))
+    ir30 = IncRel(tets, vrts, cc)
+    ir30.right.attributes["geom"] = locs
+    outputlist = vselect(locs; plane = [1.0, 0.0, 0.0, 5.0], thickness = 0.001)
+    nmatched = 0
+    for i in 1:length(locs)
+        if abs(locs[i][1] - 5.0) < 0.001
+            nmatched = nmatched + 1 
+        end
+    end
+    @test nmatched == length(outputlist)
+    # vtkwrite("delete_me", ir30)
+    # try rm("delete_me" * ".vtu"); catch end
+    true
+end
+end
+using .mt4topv2
+mt4topv2.test()
+
+module mt4topv3
+using StaticArrays
+using LinearAlgebra
+using MeshCore: P1, T4, ShapeColl,  manifdim, nvertices, nshapes, indextype
+using MeshCore: skeleton, retrieve, VecAttrib
+using MeshCore: IncRel, transpose, nrelations, nentities, boundary
+using MeshSteward: connectedv, vselect, vtkwrite
+using ..samplet4: samplet4mesh
+using Test
+function test()
+    xyz, cc = samplet4mesh()
+    # Construct the initial incidence relation
+    N, T = size(xyz, 2), eltype(xyz)
+    locs =  VecAttrib([SVector{N, T}(xyz[i, :]) for i in 1:size(xyz, 1)])
+    vrts = ShapeColl(P1, length(locs))
+    tets = ShapeColl(T4, size(cc, 1))
+    ir30 = IncRel(tets, vrts, cc)
+    ir30.right.attributes["geom"] = locs
+    outputlist = vselect(locs; nearestto = locs[13])
+    @test length(outputlist) == 1
+    @test outputlist[1] == 13 
+    true
+end
+end
+using .mt4topv3
+mt4topv3.test()

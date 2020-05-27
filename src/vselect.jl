@@ -58,6 +58,38 @@ function _box_outputlist!(outputlist::Vector{IT}, abox::BT, sdim::IT, v::VT) whe
     return outputlist, nn
 end
 
+function _distance_outputlist!(outputlist::Vector{IT}, d, fromvalue, sdim::IT, v::VT) where {IT, BT, VT}
+    # Helper functions
+    nn = 0
+    for j in 1:length(v)
+        if norm(fromvalue-v[j]) < d
+            nn = nn + 1; outputlist[nn] = j;
+        end
+    end
+    return outputlist, nn
+end
+
+function _plane_outputlist!(outputlist::Vector{IT}, distance, normal, t, sdim::IT, v::VT) where {IT, BT, VT}
+    # Helper functions
+    nn = 0
+    for j in 1:length(v)
+        ad = dot(v[j], normal);
+        if abs(distance-ad)<t
+            nn = nn + 1; outputlist[nn] = j;
+        end
+    end
+    return outputlist, nn
+end
+
+function _nearestto_outputlist!(outputlist::Vector{IT}, nearestto, sdim::IT, v::VT) where {IT, BT, VT}
+    distances =  fill(0.0, length(v));
+    for j in 1:length(v)
+        distances[j] = norm(nearestto-v[j])
+    end
+    Mv,j = findmin(distances)
+    return [j], 1
+end
+
 """
     vselect(v::FO; kwargs...) where {FO}
 
@@ -112,27 +144,21 @@ function vselect(v::VT; kwargs...) where {VT}
     # Initialize the output list
     outputlist = zeros(Int64, length(v)); nn = 0;
 
-
+    sdim = length(v[1])
     # Process the different options
     if box != nothing
-        sdim = length(v[1])
         dim = Int64(round(length(box)/2.));
         @assert dim == sdim "Dimension of box not matched to dimension of array of vertices"
         abox = vec(box)
         inflatebox!(abox, inflatevalue)
         outputlist, nn = _box_outputlist!(outputlist, abox, sdim, v) 
     elseif distance != nothing
-        fromvalue =fill!(deepcopy(v[1,:]), 0.0);
-        if from!=nothing
+        fromvalue = fill(0.0, sdim);
+        if from != nothing
             fromvalue = from;
         end
-        fromvalue = reshape(fromvalue, (size(v[1,:])))
-        d=distance+inflatevalue;
-        for i=1:size(v,1)
-            if norm(fromvalue-v[i,:])<d
-                nn =nn +1; outputlist[nn] =i;
-            end
-        end
+        d = distance+inflatevalue;
+        outputlist, nn = _distance_outputlist!(outputlist, d, fromvalue, sdim, v) 
     elseif plane != nothing
         normal = plane[1:end-1];
         normal = vec(normal/norm(normal));
@@ -142,21 +168,10 @@ function vselect(v::VT; kwargs...) where {VT}
         end
         t = thicknessvalue+inflatevalue;
         distance = plane[end];
-        for i = 1:size(v,1)
-            ad = dot(v[i,:], normal);
-            if abs(distance-ad)<t
-                nn = nn +1; outputlist[nn] =i;
-            end
-        end
+        outputlist, nn = _plane_outputlist!(outputlist, distance, normal, t, sdim, v)
     elseif nearestto != nothing
-        location = vec(nearestto);
-        distance =  zeros(size(v,1));
-        for i=1:size(v,1)
-            distance[i] = norm(location-vec(v[i,:]))
-        end
-        Mv,j = findmin(distance)
-        outputlist[1] = j;
-        nn=1;
+        nearestto = vec(nearestto);
+        outputlist, nn = _nearestto_outputlist!(outputlist, nearestto, sdim, v)
     end
     if (nn==0)
         outputlist = Int64[];# nothing matched
