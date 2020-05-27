@@ -4,6 +4,8 @@
 CurrentModule = MeshSteward
 ```
 
+## Boxes
+
 ```@docs
 initbox
 updatebox!
@@ -12,13 +14,34 @@ inflatebox!
 inbox
 boxesoverlap
 intersectboxes
-eselect
+```
+
+## Searching vertices and elements
+
+```@docs
 vselect
+eselect
+```
+
+## Import of meshes
+
+```@docs
 import_MESH
 import_NASTRAN
 import_ABAQUS
+```
+
+## Export of meshes
+
+```@docs
 vtkwrite
 export_MESH
+```
+
+## Management of meshes
+
+
+```@docs
 load
 save
 increl
@@ -26,7 +49,6 @@ insert!
 basecode
 nspacedims
 Base.summary
-vselect
 boundary
 vertices
 submesh
