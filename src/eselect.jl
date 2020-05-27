@@ -134,9 +134,9 @@ function eselect(ir::IncRel; kwargs...)
     #     Select based on fe label
     if label != nothing
         _label = attribute(ir.left, "label")
-        for i in 1:length(fes.conn)
-            if label==fes.label[i]
-                felist[i] =i;   # matched this element
+        for i in 1:nshapes(ir.left)
+            if label == _label[i]
+                felist[i] = i;   # matched this element
             end
         end
         return  felist[findall(x->x!=0, felist)]; # return the nonzero element numbers
