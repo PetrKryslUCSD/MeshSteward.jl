@@ -111,3 +111,22 @@ end
 end
 using .mbox2
 mbox2.test()
+
+
+module mboxt3
+using MeshSteward: intersectboxes
+using LinearAlgebra
+using Test
+function test()
+	b1 = [-1.0, 2.0, 0.5, 2.5]
+	b2 = [-0.7, 1.2, -0.5, 3.5]
+	ib = intersectboxes(b1, b2)
+	@test isapprox(ib, [-0.7, 1.2, 0.5, 2.5])  
+	b1 = [-1.0, 2.0, 0.5, 2.5, 77.1, 1000.0]
+	b2 = [-0.7, 1.2, -0.5, 3.5, 1077.1, 10000.0]
+	ib = intersectboxes(b1, b2)
+	@test isapprox(ib, Float64[])  
+end
+end
+using .mboxt3
+mboxt3.test()
