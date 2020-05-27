@@ -8,7 +8,8 @@ using MeshCore: IncRel, indextype, nshapes, retrieve, attribute, nentities, nrel
 Select finite elements.
 
 # Arguments
-- `ir` = incidence relation representing finite element set `(d, 0)`.
+- `ir` = incidence relation representing finite element set `(d, 0)`. The
+  "elements" are the shapes on the left of the incidence relation.
 - `kwargs` = keyword arguments to specify the selection criteria
 
 ## Selection criteria

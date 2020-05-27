@@ -195,18 +195,40 @@ function vertices(m::Mesh)
     return IncRel(ir.right, ir.right, [SVector{1, Int64}([idx]) for idx in 1:nshapes(ir.right)], "vertices")
 end
 
+"""
+    submesh(m::Mesh, list)
+
+Extract a submesh constructed of a subset of the base relation. 
+"""
 function submesh(m::Mesh, list)
-    left = ShapeColl(shapedesc(sir.left), length(ind), "facets")
-    return IncRel(ir.left, ir.right, [SVector{1, Int64}([idx]) for idx in 1:nshapes(ir.right)], "vertices")
+    left = ShapeColl(shapedesc(sir.left), length(ind))
+    return Mesh(IncRel(left, ir.right, [SVector{1, Int64}([idx]) for idx in 1:nshapes(ir.right)]))
 end
 
-
-function label(m::Mesh, irc, list)
-    ir = increl(m, irc)
-    if !("label" in ir.attributes)
-        dw = AttribDataWrapper(fill(zero(indextype(ir)), nshapes(ir.left)))
-        ir.attributes["label"] = Attrib(i -> dw(i))
+function _label(sc, list, lab)
+    if !("label" in keys(sc.attributes))
+        sc.attributes["label"] = VecAttrib([zero(typeof(lab)) for idx in 1:nshapes(sc)])
     end
-    a = ir.attributes["label"]
-    v = nvals()
+    a = sc.attributes["label"]
+    for i in 1:length(list)
+        a[list[i]] = lab
+    end
+end
+
+"""
+    label(m::Mesh, irc, list, lab)
+
+Label shapes in `list` with the label `lab`.
+
+Label the shapes on the `shapecoll` of the incidence relation.
+`shapecoll` must be either `:left` or `:right`.
+"""
+function label(m::Mesh, irc, shapecoll, list, lab)
+    ir = increl(m, irc)
+    if shapecoll == :left
+        _label(ir.left, list, lab)
+    else
+        shapecoll == :right
+        _label(ir.right, list, lab)
+    end
 end

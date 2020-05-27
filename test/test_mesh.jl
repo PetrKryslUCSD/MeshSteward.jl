@@ -399,3 +399,42 @@ end
 using .mmvtx1
 mmvtx1.test()
 
+
+module mmvtx2
+using MeshSteward: import_NASTRAN, vtkwrite
+using MeshSteward: Mesh, insert!, vertices, submesh
+using MeshSteward: summary, basecode, boundary, eselect, label, initbox, updatebox!, baseincrel
+using MeshCore: nshapes, attribute, subset
+using Test
+function test()
+    connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+    connectivity = connectivities[1]
+    mesh = Mesh()
+    insert!(mesh, connectivity)
+    @test basecode(mesh) == (3, 0)
+    vir = vertices(mesh) 
+    @test nshapes(vir.right) == nshapes(vir.left) 
+    @test nshapes(vir.right) == nshapes(connectivity.right) 
+    geom = attribute(vir.right, "geom")
+    box = initbox(geom[1])
+    for i in 1:length(geom)
+        updatebox!(box, geom[i])
+    end
+    box[1] = (box[1] + box[2]) / 2
+    ir = baseincrel(mesh)
+    el = eselect(ir; box = box, inflate = 0.0009)
+    @test length(el)  == 498
+    label(mesh, (3, 0), :left, el, 8)
+    el = eselect(ir; label = 8)
+    @test length(el)  == 498
+
+    # @test length(el) == 44
+    # s = summary(mesh)
+    # vtkwrite("trunc_cyl_shell_0-full", ir)
+    # vtkwrite("trunc_cyl_shell_0-subset", subset(ir, el))
+    # try rm("trunc_cyl_shell_0-vertices" * ".vtu"); catch end
+    return true
+end
+end
+using .mmvtx2
+mmvtx2.test()
