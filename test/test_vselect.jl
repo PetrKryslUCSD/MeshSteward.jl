@@ -95,7 +95,7 @@ function test()
     end
     @test nmatched == length(outputlist)
     vtkwrite("delete_me", ir30)
-    # try rm("delete_me" * ".vtu"); catch end
+    try rm("delete_me" * ".vtu"); catch end
     true
 end
 end

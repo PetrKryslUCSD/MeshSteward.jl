@@ -69,3 +69,57 @@ end
 end
 using .mt4gen4
 mt4gen4.test()
+
+module mt4gen4b
+using StaticArrays
+using MeshCore: nshapes
+using MeshSteward: vtkwrite
+using MeshSteward: T4blockx, linearspace
+using Test
+function test()
+    connectivity = T4blockx([1.0, 2.0, 3.0], [1.0, 2.0, 3.0], linearspace(0.0, 5.0, 7), :b)
+    # @show (nshapes(connectivity.right), nshapes(connectivity.left))
+    @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (63, 144)
+    vtkwrite("mt4gen4", connectivity)
+    try rm("mt4gen4.vtu"); catch end
+    true
+end
+end
+using .mt4gen4b
+mt4gen4b.test()
+
+module mt4gen4ca
+using StaticArrays
+using MeshCore: nshapes
+using MeshSteward: vtkwrite
+using MeshSteward: T4blockx, linearspace
+using Test
+function test()
+    connectivity = T4blockx([1.0, 2.0, 3.0], [1.0, 2.0, 3.0], linearspace(0.0, 5.0, 7), :ca)
+    # @show (nshapes(connectivity.right), nshapes(connectivity.left))
+    @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (63, 120)
+    vtkwrite("mt4gen4", connectivity)
+    try rm("mt4gen4.vtu"); catch end
+    true
+end
+end
+using .mt4gen4ca
+mt4gen4ca.test()
+
+module mt4gen4cb
+using StaticArrays
+using MeshCore: nshapes
+using MeshSteward: vtkwrite
+using MeshSteward: T4blockx, linearspace
+using Test
+function test()
+    connectivity = T4blockx([1.0, 2.0, 3.0], [1.0, 2.0, 3.0], linearspace(0.0, 5.0, 7), :cb)
+    # @show (nshapes(connectivity.right), nshapes(connectivity.left))
+    @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (63, 120)
+    vtkwrite("mt4gen4", connectivity)
+    try rm("mt4gen4.vtu"); catch end
+    true
+end
+end
+using .mt4gen4cb
+mt4gen4cb.test()
