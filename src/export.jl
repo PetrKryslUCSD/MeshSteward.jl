@@ -31,11 +31,23 @@ function vtkwrite(filename, connectivity, data = String[])
     for d in data
         if d in keys(connectivity.right.attributes)
             a = attribute(connectivity.right, d)
-            pdata = [a[i] for i in 1:length(a)] 
+            nc = length(a[1])
+            pdata = fill(0.0, nc, length(a))
+            for j in 1:nc
+                for i in 1:length(a)
+                    pdata[j, i] = a[i][j]
+                end
+            end
             vtkfile[d] = pdata
         elseif d in keys(connectivity.left.attributes)
             a = attribute(connectivity.left, d)
-            cdata = [a[i] for i in 1:length(a)] 
+            nc = length(a[1])
+            cdata = fill(0.0, nc, length(a))
+            for j in 1:nc
+                for i in 1:length(a)
+                    cdata[j, i] = a[i][j]
+                end
+            end
             vtkfile[d] = cdata
         end
     end
