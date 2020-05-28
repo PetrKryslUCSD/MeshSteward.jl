@@ -1,6 +1,6 @@
 using MeshCore
 using MeshCore: ShapeColl, IncRel, skeleton
-using MeshCore: shapedesc, nshapes, code, attribute
+using MeshCore: shapedesc, nshapes, code, attribute, retrieve
 import Base.show
 using StaticArrays
 
@@ -9,13 +9,15 @@ using StaticArrays
 
 The type of the mesh. 
 
-It stores the incidence relations keyed by the code of the relation: `(d1,
-d2)`, where `d1` is the manifold dimension of the shape collection on the left,
-and `d2` is the manifold dimension of the shape collection on the right.
+It stores the incidence relations keyed by the code of the relation.
+
+The incidence relation code is `(d1, d2)`, where `d1` is the manifold dimension
+of the shape collection on the left, and `d2` is the manifold dimension of the
+shape collection on the right.
 """
 struct Mesh
-    increls::Dict{Tuple{Int64, Int64}, IncRel} # dictionary of incidence relations
     name::String # name of the mesh
+    _increls::Dict{Tuple{Int64, Int64, String}, IncRel} # dictionary of incidence relations
 end
 
 """
@@ -24,7 +26,7 @@ end
 Define the mesh with default name and empty dictionary of incidence relations.
 """
 function Mesh()
-    Mesh(Dict{Tuple{Int64, Int64}, IncRel}(), "mesh")
+    Mesh("mesh", Dict{Tuple{Int64, Int64, String}, IncRel}())
 end
 
 """
@@ -33,7 +35,7 @@ end
 Define the mesh named `s` with an empty dictionary of incidence relations.
 """
 function Mesh(s::String)
-    Mesh(Dict{Tuple{Int64, Int64}, IncRel}(), s)
+    Mesh(s, Dict{Tuple{Int64, Int64, String}, IncRel}())
 end
 
 """
@@ -65,17 +67,38 @@ end
 """
     increl(m::Mesh, irc::Tuple{Int64, Int64}) 
 
-Retrieve the named incidence relation.
+Retrieve the named incidence relation based on the code.
 """
-increl(m::Mesh, irc::Tuple{Int64, Int64}) = m.increls[irc]
+increl(m::Mesh, irc::Tuple{Int64, Int64}) = m._increls[(irc..., "")]
+
+"""
+    increl(m::Mesh, fullirc::Tuple{Int64, Int64, String})
+
+Retrieve the named incidence relation based on the full key.
+"""
+increl(m::Mesh, fullirc::Tuple{Int64, Int64, String}) = m._increls[fullirc]
 
 """
     insert!(m::Mesh, increl::IncRel)
 
-Insert the incidence relation. The code of the incidence relation is the key
+Insert the incidence relation under its code and empty tag. 
+
+
+The code of the incidence relation combined with an empty tag (`""`) is the key
 under which this relation is stored in the mesh.
 """
-insert!(m::Mesh, ir::IncRel) = (m.increls[code(ir)] = ir)
+insert!(m::Mesh, ir::IncRel) = (m._increls[(code(ir)..., "")] = ir)
+
+"""
+    insert!(m::Mesh, increl::IncRel, tag::String)
+
+Insert the incidence relation under its code and given tag. 
+
+
+The code of the incidence relation combined with the tag is the key
+under which this relation is stored in the mesh.
+"""
+insert!(m::Mesh, ir::IncRel, tag::String) = (m._increls[(code(ir)..., tag)] = ir)
 
 """
     basecode(m::Mesh)
@@ -87,7 +110,7 @@ interior of the domain.
 """
 function basecode(m::Mesh)
     maxd = 0
-    for irc in keys(m.increls)
+    for irc in keys(m._increls)
         maxd = max(maxd, irc[1])
     end
     return (maxd, 0)
@@ -145,12 +168,17 @@ Form a brief summary of the mesh.
 """
 function Base.summary(m::Mesh)
     s = "Mesh $(m.name):"
-    for ir in m.increls
+    for ir in m._increls
         s = s * " $(ir[1]) = " * summary(ir[2]) * "; "
     end
     return s
 end
 
+"""
+    Base.summary(io::IO, m::Mesh)
+
+Form a brief summary of the mesh.
+"""
 function Base.summary(io::IO, m::Mesh)
     println(summary(m))
 end
@@ -173,6 +201,8 @@ end
     boundary(m::Mesh)
 
 Compute the boundary of the mesh.
+
+The incidents relation is stored in the mesh with the tag "boundary".
 """
 function boundary(m::Mesh)
 	ir = increl(m, basecode(m))
@@ -182,13 +212,16 @@ function boundary(m::Mesh)
     isboundary = sir.left.attributes["isboundary"]
     ind = [i for i in 1:length(isboundary) if isboundary[i]] 
     lft = ShapeColl(shapedesc(sir.left), length(ind), "facets")
-    return IncRel(lft, sir.right, deepcopy(sir._v[ind]))
+    bir = IncRel(lft, sir.right, deepcopy(sir._v[ind]))
+    insert!(m, bir, "boundary")
+    return bir
 end
 
 """
     vertices(m::Mesh)
 
-Compute the `(0, 0)` incidence relation for the vertices of the base incidence relation.
+Compute the `(0, 0)` incidence relation for the vertices of the base incidence
+relation.
 """
 function vertices(m::Mesh)
     ir = increl(m, basecode(m))
@@ -201,8 +234,12 @@ end
 Extract a submesh constructed of a subset of the base relation. 
 """
 function submesh(m::Mesh, list)
-    left = ShapeColl(shapedesc(sir.left), length(ind))
-    return Mesh(IncRel(left, ir.right, [SVector{1, Int64}([idx]) for idx in 1:nshapes(ir.right)]))
+    ir = increl(m, basecode(m))
+    lft = ShapeColl(shapedesc(ir.left), length(list))
+    v = [retrieve(ir, idx) for idx in list]
+    nir = IncRel(lft, ir.right, v)
+    nm = Mesh()
+    return insert!(nm, nir)
 end
 
 function _label(sc, list, lab)
