@@ -441,7 +441,7 @@ mmvtx2.test()
 
 
 module mmvtx3
-using MeshSteward: import_NASTRAN, vtkwrite
+using MeshSteward: import_NASTRAN, vtkwrite, geometry
 using MeshSteward: Mesh, insert!, vertices, submesh, increl, baseincrel
 using MeshSteward: summary, basecode, boundary, eselect, label, initbox, updatebox!, baseincrel
 using MeshCore: nshapes, attribute, subset, code, nrelations
@@ -455,7 +455,7 @@ function test()
     vir = vertices(mesh) 
     @test nshapes(vir.right) == nshapes(vir.left) 
     @test nshapes(vir.right) == nshapes(connectivity.right) 
-    geom = attribute(vir.right, "geom")
+    geom = geometry(mesh)
     box = initbox(geom[1])
     for i in 1:length(geom)
         updatebox!(box, geom[i])
