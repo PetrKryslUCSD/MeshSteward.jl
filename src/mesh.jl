@@ -135,6 +135,16 @@ Retrieve the base incidence relation for the mesh.
 baseincrel(m::Mesh) = increl(m, basecode(m))
 
 """
+    geometry(m::Mesh)
+
+Retrieve the geometry attribute from the vertices.
+"""
+function geometry(m::Mesh)
+    ir = increl(m, basecode(m))
+    return attribute(ir.right, "geom")
+end
+
+"""
     Base.summary(ir::IncRel)
 
 Form a brief summary of the incidence relation.
