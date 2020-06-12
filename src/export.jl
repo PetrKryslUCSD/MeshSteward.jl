@@ -13,10 +13,10 @@ Write VTK file with the mesh.
 - `connectivity` = incidence relation of the type `d -> 0`. It must have a "geom"
   attribute for access to the locations of all the vertices that the
   connectivity incidence relation references.
-- `data` = array of string keys. Names of attributes of either the left or the
-  right shape collection of the `connectivity` incidence relation.
+- `data` = array of named tuples. Names of attributes of either the left or the
+  right shape collection of the `connectivity` incidence relation. Property names: `:name` required, name of the attribute. `:allxyz` optional, pad the attribute to be a three-dimensional quantity (in the global Cartesian coordinate system).
 """
-function vtkwrite(filename, connectivity, data = String[])
+function vtkwrite(filename, connectivity, data = [])
     locs = attribute(connectivity.right, "geom")
     # Fill in a matrix of point coordinates
     points = fill(zero(eltype(locs[1])), length(locs[1]), length(locs))
@@ -28,19 +28,23 @@ function vtkwrite(filename, connectivity, data = String[])
     # Prepare an array of the cells
     cells = [MeshCell(celltype, [j for j in retrieve(connectivity, i)]) for i in 1:nrelations(connectivity)]
     vtkfile = vtk_grid(filename, points, cells, compress=3)
-    for d in data
-        if d in keys(connectivity.right.attributes)
-            a = attribute(connectivity.right, d)
+    for nt in data
+        an = nt.name # name of the shape collection
+        pn = propertynames(nt)
+        allxyz = (:allxyz in pn ? nt.allxyz : false)
+        if an in keys(connectivity.right.attributes)
+            a = attribute(connectivity.right, an)
             nc = length(a[1])
-            pdata = fill(0.0, nc, length(a))
+            ncz = ((nc < 3) && allxyz ? ncz = 3 : nc)
+            pdata = fill(0.0, ncz, length(a))
             for j in 1:nc
                 for i in 1:length(a)
                     pdata[j, i] = a[i][j]
                 end
             end
-            vtkfile[d] = pdata
-        elseif d in keys(connectivity.left.attributes)
-            a = attribute(connectivity.left, d)
+            vtkfile[an] = pdata
+        elseif an in keys(connectivity.left.attributes)
+            a = attribute(connectivity.left, an)
             nc = length(a[1])
             cdata = fill(0.0, nc, length(a))
             for j in 1:nc
@@ -48,7 +52,7 @@ function vtkwrite(filename, connectivity, data = String[])
                     cdata[j, i] = a[i][j]
                 end
             end
-            vtkfile[d] = cdata
+            vtkfile[an] = cdata
         end
     end
     return vtk_save(vtkfile)
