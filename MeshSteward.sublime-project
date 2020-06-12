@@ -3,6 +3,9 @@
 	[
 		{
 			"path": "."
+		},
+		{
+			"path": "C:\\Users\\PKrysl\\Documents\\work\\MeshCore.jl"
 		}
 	]
 }
