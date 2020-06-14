@@ -100,7 +100,7 @@ using MeshSteward: T6blockx
 using Test
 function test()
     connectivity = T6blockx([0.0, 1.0, 3.0], [0.0, 1.0, 3.0], :b)
-    @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (9, 8)
+    @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (25, 8)
     vtkwrite("mt6gen1", connectivity)
     try rm("mt6gen1.vtu"); catch end
     true
