@@ -1,10 +1,11 @@
 using DelimitedFiles
 using WriteVTK
-using MeshCore: AbsShapeDesc, P1, L2, T3, Q4, T4, H8
+using MeshCore: AbsShapeDesc, P1, L2, T3, Q4, T4, H8, T6 
 using MeshCore: VecAttrib
-using MeshCore: shapedesc, nshapes, IncRel
-using MeshCore: ShapeColl
+using MeshCore: shapedesc, nshapes, IncRel, datavaluetype
+using MeshCore: ShapeColl, skeleton, bbyfacets, nshapes, retrieve
 using LinearAlgebra: norm
+
 
 """
     T3blockx(xs::Vector{T}, ys::Vector{T}, orientation::Symbol) where {T}
@@ -86,4 +87,35 @@ See also: T3blockx
 function T3block(Length, Width, nL, nW, orientation = :a; kwargs...)
     return T3blockx(collect(linearspace(0.0, Length, nL+1)),
                     collect(linearspace(0.0, Width, nW+1)), orientation; kwargs...);
+end
+
+function T6blockx(xs::Vector{T}, ys::Vector{T}, orientation::Symbol; intbytes = 8) where 
+    {T}
+    ir = T3blockx(xs, ys, orientation; intbytes = intbytes)
+    locs = ir.right.attributes["geom"]
+    sk = skeleton(ir)  # skeleton consists of edges
+    bf = bbyfacets(ir, sk) # edges bounding triangles
+    n = nshapes(ir.right) # number of vertices in the three-node triangle mesh
+    med = [idx+n for idx in 1:nshapes(sk.left)] 
+    C = fill(zero(indextype(ir)), nshapes(ir.left), 6)
+    # Create array to hold the new coordinates
+    nx = fill(zero(eltype(datavaluetype(locs))), length(locs) + length(med), length(locs[1]))
+    for i in 1:length(locs) # copy in the old locations
+        nx[i, :] .= locs[i]
+    end
+    for i in 1:nshapes(ir.left)
+        C[i, 1:3] .= retrieve(ir, i)
+        ec = abs.(retrieve(bf, i)) # ignore the orientation
+        for (j, w) in enumerate((5, 6, 4))
+            en = med[ec[j]]
+            C[i, w] = en
+            ev = retrieve(sk, ec[j])
+            nx[en, :] = (locs[ev[1]] + locs[ev[2]]) / 2.0
+        end
+    end
+    locs =  VecAttrib([SVector{size(nx, 2), T}(nx[i, :]) for i in 1:size(nx, 1)])
+    vertices = ShapeColl(P1, size(nx, 1), "vertices")
+    vertices.attributes["geom"] = locs
+    elements = ShapeColl(T6, size(C, 1), "elements")
+    return IncRel(elements, vertices, C)
 end

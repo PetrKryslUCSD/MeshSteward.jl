@@ -479,7 +479,9 @@ function test()
     # @show  summary(mesh)
     # vtkwrite("trunc_cyl_shell_0-full", ir)
     # vtkwrite("trunc_cyl_shell_0-subset", subset(ir, el))
-    # try rm("trunc_cyl_shell_0-vertices" * ".vtu"); catch end
+    try rm("trunc_cyl_shell_0-full" * ".vtu"); catch end
+    try rm("trunc_cyl_shell_0-subset" * ".vtu"); catch end
+    try rm("trunc_cyl_shell_0-vertices" * ".vtu"); catch end
     return true
 end
 end

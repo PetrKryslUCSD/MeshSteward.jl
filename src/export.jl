@@ -3,7 +3,7 @@
 #     Q4=>9, T4=>10, H8=>12, Q8=>23,
 #     L3=>21, T6=>22,
 #     T10=>24, H20=>25)
-const _VTK_TYPE_MAP = Dict{AbsShapeDesc, Int}(P1=>1, L2=>3, T3=>5, Q4=>9, T4=>10, H8=>12)
+const _VTK_TYPE_MAP = Dict{AbsShapeDesc, Int}(P1=>1, L2=>3, T3=>5, Q4=>9, T4=>10, H8=>12, T6=>22, Q8=>23)
 
 """
     vtkwrite(filename, connectivity)
