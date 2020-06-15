@@ -8,7 +8,7 @@ using LinearAlgebra: norm
 
 
 """
-    T3blockx(xs::Vector{T}, ys::Vector{T}, orientation::Symbol) where {T}
+    T3blockx(xs::Vector{T}, ys::Vector{T}, orientation::Symbol; intbytes = 8) where {T}
 
 Generate a graded triangle mesh  of a 2D block.
 
@@ -80,7 +80,7 @@ end
 """
     T3block(Length, Width, nL, nW, orientation = :a)
 
-Generate a triangle mesh  of the 2D block.
+Generate a triangle mesh  of a 2D block.
 
 See also: T3blockx
 """
@@ -89,6 +89,23 @@ function T3block(Length, Width, nL, nW, orientation = :a; kwargs...)
                     collect(linearspace(0.0, Width, nW+1)), orientation; kwargs...);
 end
 
+"""
+    T6blockx(xs::Vector{T}, ys::Vector{T}, orientation::Symbol; intbytes = 8) where 
+        {T}
+
+Generate a graded quadratic triangle mesh  of a 2D block.
+
+The mesh is produced by splitting each logical  rectangular cell into two
+triangles. Orientation may be chosen as `:a`, `:b`.
+
+Keyword argument `intbytes` controls the size of the integer indexes.
+
+# Return
+By convention the function returns an incidence relation (`connectivity`)
+between the elements (`connectivity.left`) and the vertices
+(`connectivity.right`). The geometry is stored as the attribute "geom" of the
+vertices.
+"""
 function T6blockx(xs::Vector{T}, ys::Vector{T}, orientation::Symbol; intbytes = 8) where 
     {T}
     ir = T3blockx(xs, ys, orientation; intbytes = intbytes)
@@ -118,4 +135,16 @@ function T6blockx(xs::Vector{T}, ys::Vector{T}, orientation::Symbol; intbytes = 
     vertices.attributes["geom"] = locs
     elements = ShapeColl(T6, size(C, 1), "elements")
     return IncRel(elements, vertices, C)
+end
+
+"""
+    T6block(Length, Width, nL, nW, orientation = :a)
+
+Generate a quadratic triangle mesh of a 2D block.
+
+See also: T6blockx
+"""
+function T6block(Length, Width, nL, nW, orientation = :a; kwargs...)
+    return T6blockx(collect(linearspace(0.0, Length, nL+1)),
+                    collect(linearspace(0.0, Width, nW+1)), orientation; kwargs...);
 end
