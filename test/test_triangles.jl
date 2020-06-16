@@ -174,7 +174,7 @@ function test()
     @test nshapes(connectivity3.left) == nshapes(connectivity.left)
     @test nshapes(connectivity3.right) == nshapes(connectivity.right)
     vtkwrite("mt6gen4", connectivity3)
-    # try rm("mt6gen4.vtu"); catch end
+    try rm("mt6gen4.vtu"); catch end
     true
 end
 end
