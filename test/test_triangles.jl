@@ -130,3 +130,53 @@ end
 end
 using .mt6gen2
 mt6gen2.test()
+
+
+module mt6gen3
+using StaticArrays
+using MeshCore: nshapes
+using MeshSteward: vtkwrite
+using MeshSteward: T3block, T6block, T3toT6
+using Test
+function test()
+    connectivity = T3block(2.0, 0.75*pi, 6, 5, :b)
+    locs = connectivity.right.attributes["geom"]
+    for i in 1:length(locs)
+        r, a = locs[i][1]+2.7, locs[i][2]
+        locs[i] = (cos(a)*r, sin(a)*r)
+    end
+    @test nshapes(connectivity.left) == 60
+    connectivity = T3toT6(connectivity)
+    vtkwrite("mt6gen3", connectivity)
+    try rm("mt6gen3.vtu"); catch end
+    true
+end
+end
+using .mt6gen3
+mt6gen3.test()
+
+
+module mt6gen4
+using StaticArrays
+using MeshCore: nshapes
+using MeshSteward: vtkwrite
+using MeshSteward: T3block, T6block, T3toT6, T6toT3
+using Test
+function test()
+    connectivity = T6block(2.0, 0.75*pi, 6, 5, :b)
+    locs = connectivity.right.attributes["geom"]
+    for i in 1:length(locs)
+        r, a = locs[i][1]+2.7, locs[i][2]
+        locs[i] = (cos(a)*r, sin(a)*r)
+    end
+    @test nshapes(connectivity.left) == 60
+    connectivity3 = T6toT3(connectivity)
+    @test nshapes(connectivity3.left) == nshapes(connectivity.left)
+    @test nshapes(connectivity3.right) == nshapes(connectivity.right)
+    vtkwrite("mt6gen4", connectivity3)
+    # try rm("mt6gen4.vtu"); catch end
+    true
+end
+end
+using .mt6gen4
+mt6gen4.test()

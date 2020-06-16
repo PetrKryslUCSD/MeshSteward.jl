@@ -1,8 +1,8 @@
 using DelimitedFiles
 using WriteVTK
 using MeshCore: AbsShapeDesc, P1, L2, T3, Q4, T4, H8, T6 
-using MeshCore: VecAttrib
-using MeshCore: shapedesc, nshapes, IncRel, datavaluetype
+using MeshCore: VecAttrib, @_check, datavaluetype
+using MeshCore: shapedesc, nshapes, IncRel
 using MeshCore: ShapeColl, skeleton, bbyfacets, nshapes, retrieve
 using LinearAlgebra: norm
 
@@ -89,26 +89,14 @@ function T3block(Length, Width, nL, nW, orientation = :a; kwargs...)
                     collect(linearspace(0.0, Width, nW+1)), orientation; kwargs...);
 end
 
+
 """
-    T6blockx(xs::Vector{T}, ys::Vector{T}, orientation::Symbol; intbytes = 8) where 
-        {T}
+    T3toT6(ir)
 
-Generate a graded quadratic triangle mesh  of a 2D block.
-
-The mesh is produced by splitting each logical  rectangular cell into two
-triangles. Orientation may be chosen as `:a`, `:b`.
-
-Keyword argument `intbytes` controls the size of the integer indexes.
-
-# Return
-By convention the function returns an incidence relation (`connectivity`)
-between the elements (`connectivity.left`) and the vertices
-(`connectivity.right`). The geometry is stored as the attribute "geom" of the
-vertices.
+Convert three node triangles (T3) to six node triangles (T6).
 """
-function T6blockx(xs::Vector{T}, ys::Vector{T}, orientation::Symbol; intbytes = 8) where 
-    {T}
-    ir = T3blockx(xs, ys, orientation; intbytes = intbytes)
+function T3toT6(ir)
+    @_check shapedesc(ir.left) == T3
     locs = ir.right.attributes["geom"]
     sk = skeleton(ir)  # skeleton consists of edges
     bf = bbyfacets(ir, sk) # edges bounding triangles
@@ -130,11 +118,34 @@ function T6blockx(xs::Vector{T}, ys::Vector{T}, orientation::Symbol; intbytes = 
             nx[en, :] = (locs[ev[1]] + locs[ev[2]]) / 2.0
         end
     end
-    locs =  VecAttrib([SVector{size(nx, 2), T}(nx[i, :]) for i in 1:size(nx, 1)])
+    locs =  VecAttrib([SVector{size(nx, 2), eltype(locs[1])}(nx[i, :]) for i in 1:size(nx, 1)])
     vertices = ShapeColl(P1, size(nx, 1), "vertices")
     vertices.attributes["geom"] = locs
     elements = ShapeColl(T6, size(C, 1), "elements")
     return IncRel(elements, vertices, C)
+end
+
+"""
+    T6blockx(xs::Vector{T}, ys::Vector{T}, orientation::Symbol; intbytes = 8) where 
+        {T}
+
+Generate a graded quadratic triangle mesh  of a 2D block.
+
+The mesh is produced by splitting each logical  rectangular cell into two
+triangles. Orientation may be chosen as `:a`, `:b`.
+
+Keyword argument `intbytes` controls the size of the integer indexes.
+
+# Return
+By convention the function returns an incidence relation (`connectivity`)
+between the elements (`connectivity.left`) and the vertices
+(`connectivity.right`). The geometry is stored as the attribute "geom" of the
+vertices.
+"""
+function T6blockx(xs::Vector{T}, ys::Vector{T}, orientation::Symbol; intbytes = 8) where 
+    {T}
+    ir = T3blockx(xs, ys, orientation; intbytes = intbytes)
+    return T3toT6(ir)
 end
 
 """
@@ -147,4 +158,21 @@ See also: T6blockx
 function T6block(Length, Width, nL, nW, orientation = :a; kwargs...)
     return T6blockx(collect(linearspace(0.0, Length, nL+1)),
                     collect(linearspace(0.0, Width, nW+1)), orientation; kwargs...);
+end
+
+"""
+    T6toT3(ir)
+
+Convert six node triangles (T6) to three node triangles (T3).
+"""
+function T6toT3(ir)
+    @_check shapedesc(ir.left) == T6
+    # The same vertices
+    vertices = ShapeColl(P1, nshapes(ir.right), "vertices")
+    locs = ir.right.attributes["geom"]
+    vertices.attributes["geom"] = locs
+    # Elements have only the three corner nodes
+    C = [SVector{3}(retrieve(ir, idx)[1:3]) for idx in 1:nrelations(ir)] 
+    elements = ShapeColl(T3, length(C), "elements")
+    return IncRel(elements, vertices, C)
 end
