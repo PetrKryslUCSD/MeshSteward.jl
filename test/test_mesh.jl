@@ -429,7 +429,7 @@ function test()
     @test length(el)  == 498
 
     # @test length(el) == 44
-    @test summary(mesh) == "Mesh mesh: (3, 0, \"\") = (elements, vertices): elements = 996 x T4 {label,}, vertices = 376 x P1 {geom,}; "
+    @test summary(mesh) == "Mesh mesh: ((3, 0), \"\") = (elements, vertices): elements = 996 x T4 {label,}, vertices = 376 x P1 {geom,}; "
     # vtkwrite("trunc_cyl_shell_0-full", ir)
     # vtkwrite("trunc_cyl_shell_0-subset", subset(ir, el))
     # try rm("trunc_cyl_shell_0-vertices" * ".vtu"); catch end
@@ -473,7 +473,7 @@ function test()
     @test nrelations(halfmesh) == 498
 
     bir = boundary(mesh)
-    bir2 = increl(mesh, (code(bir)..., "boundary"))
+    bir2 = increl(mesh, (code(bir), "boundary"))
     @test summary(bir) == summary(bir2)
     # @test length(el) == 44
     # @show  summary(mesh)

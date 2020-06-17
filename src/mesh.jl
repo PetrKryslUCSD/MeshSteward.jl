@@ -14,10 +14,14 @@ It stores the incidence relations keyed by the code of the relation.
 The incidence relation code is `(d1, d2)`, where `d1` is the manifold dimension
 of the shape collection on the left, and `d2` is the manifold dimension of the
 shape collection on the right.
+
+The incidence relations are stored with a key consisting of the code and a
+string tag. If the string tag is unspecified, it is assumed to be an empty
+string.
 """
 struct Mesh
     name::String # name of the mesh
-    _increls::Dict{Tuple{Int64, Int64, String}, IncRel} # dictionary of incidence relations
+    _increls::Dict{Tuple{Tuple{Int64, Int64}, String}, IncRel} # dictionary of incidence relations
 end
 
 """
@@ -26,7 +30,7 @@ end
 Define the mesh with default name and empty dictionary of incidence relations.
 """
 function Mesh()
-    Mesh("mesh", Dict{Tuple{Int64, Int64, String}, IncRel}())
+    Mesh("mesh", Dict{Tuple{Tuple{Int64, Int64}, String}, IncRel}())
 end
 
 """
@@ -35,7 +39,7 @@ end
 Define the mesh named `s` with an empty dictionary of incidence relations.
 """
 function Mesh(s::String)
-    Mesh(s, Dict{Tuple{Int64, Int64, String}, IncRel}())
+    Mesh(s, Dict{Tuple{Tuple{Int64, Int64}, String}, IncRel}())
 end
 
 """
@@ -68,37 +72,44 @@ end
     increl(m::Mesh, irc::Tuple{Int64, Int64}) 
 
 Retrieve the named incidence relation based on the code.
+
+Any tag is matched.
 """
-increl(m::Mesh, irc::Tuple{Int64, Int64}) = m._increls[(irc..., "")]
+function increl(m::Mesh, irc::Tuple{Int64, Int64}) 
+    for (k, v) in zip(keys(m._increls), values(m._increls))
+        if k[1] == irc
+            return v
+        end
+    end
+    return nothing
+end
 
 """
-    increl(m::Mesh, fullirc::Tuple{Int64, Int64, String})
+    increl(m::Mesh, fullirc::Tuple{Tuple{Int64, Int64}, String})
 
-Retrieve the named incidence relation based on the full key.
+Retrieve the named incidence relation based on the full key (code + tag).
 """
-increl(m::Mesh, fullirc::Tuple{Int64, Int64, String}) = m._increls[fullirc]
+increl(m::Mesh, fullirc::Tuple{Tuple{Int64, Int64}, String}) = m._increls[fullirc]
 
 """
     insert!(m::Mesh, increl::IncRel)
 
 Insert the incidence relation under its code and empty tag. 
 
-
 The code of the incidence relation combined with an empty tag (`""`) is the key
 under which this relation is stored in the mesh.
 """
-insert!(m::Mesh, ir::IncRel) = (m._increls[(code(ir)..., "")] = ir)
+insert!(m::Mesh, ir::IncRel) = (m._increls[(code(ir), "")] = ir)
 
 """
     insert!(m::Mesh, increl::IncRel, tag::String)
 
 Insert the incidence relation under its code and given tag. 
 
-
 The code of the incidence relation combined with the tag is the key
 under which this relation is stored in the mesh.
 """
-insert!(m::Mesh, ir::IncRel, tag::String) = (m._increls[(code(ir)..., tag)] = ir)
+insert!(m::Mesh, ir::IncRel, tag::String) = (m._increls[(code(ir), tag)] = ir)
 
 """
     basecode(m::Mesh)
@@ -111,7 +122,8 @@ interior of the domain.
 function basecode(m::Mesh)
     maxd = 0
     for irc in keys(m._increls)
-        maxd = max(maxd, irc[1])
+        # Test the `d`
+        maxd = max(maxd, irc[1][1])
     end
     return (maxd, 0)
 end

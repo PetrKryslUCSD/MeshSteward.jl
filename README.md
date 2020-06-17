@@ -10,6 +10,8 @@ Manages finite element meshes powered by MeshCore.jl
 
 ## News
 
+- 06/17/2020: Key the stored relations with a tuple consisting of the code and a
+  string tag.
 - 05/26/2020: First version.
 
 ## Installation
