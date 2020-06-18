@@ -1,5 +1,7 @@
 using Test
 
+@time @testset "Modification" begin include("test_modification.jl") end
+
 @time @testset "Search elements" begin include("test_eselect.jl") end
 @time @testset "Boxes" begin include("test_boxes.jl") end
 @time @testset "Search vertices" begin include("test_vselect.jl") end

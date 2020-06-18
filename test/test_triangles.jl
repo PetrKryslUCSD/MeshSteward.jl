@@ -172,7 +172,8 @@ function test()
     @test nshapes(connectivity.left) == 60
     connectivity3 = T6toT3(connectivity)
     @test nshapes(connectivity3.left) == nshapes(connectivity.left)
-    @test nshapes(connectivity3.right) == nshapes(connectivity.right)
+    @test nshapes(connectivity3.right) != nshapes(connectivity.right)
+    @test nshapes(connectivity3.right) == 42
     vtkwrite("mt6gen4", connectivity3)
     try rm("mt6gen4.vtu"); catch end
     true

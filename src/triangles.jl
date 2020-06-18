@@ -164,6 +164,9 @@ end
     T6toT3(ir)
 
 Convert six node triangles (T6) to three node triangles (T3).
+
+Note: Unconnected vertices will be removed from the right-hand side shape
+collection.
 """
 function T6toT3(ir)
     @_check shapedesc(ir.left) == T6
@@ -174,5 +177,9 @@ function T6toT3(ir)
     # Elements have only the three corner nodes
     C = [SVector{3}(retrieve(ir, idx)[1:3]) for idx in 1:nrelations(ir)] 
     elements = ShapeColl(T3, length(C), "elements")
-    return IncRel(elements, vertices, C)
+    newir = IncRel(elements, vertices, C)
+    # Remove unconnected vertices.
+    ic = vconnected(newir)
+    nn = vnewnumbering(newir, ic)
+    return compactify(newir, nn)
 end

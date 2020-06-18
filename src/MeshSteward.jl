@@ -10,6 +10,7 @@ include("triangles.jl")
 include("quadrilaterals.jl")
 
 include("io.jl")
+include("modification.jl")
 
 include("mesh.jl")
 
