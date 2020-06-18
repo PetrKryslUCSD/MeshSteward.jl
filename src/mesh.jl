@@ -151,7 +151,7 @@ baseincrel(m::Mesh) = increl(m, basecode(m))
 
 Retrieve the base incidence relation for the mesh distinguished by its tag.
 """
-baseincrel(m::Mesh, tag::String) = increl(m, basecode(m), tag)
+baseincrel(m::Mesh, tag::String) = increl(m, (basecode(m), tag))
 
 """
     geometry(m::Mesh)
