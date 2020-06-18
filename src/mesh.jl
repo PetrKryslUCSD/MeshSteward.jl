@@ -147,6 +147,13 @@ Retrieve the base incidence relation for the mesh.
 baseincrel(m::Mesh) = increl(m, basecode(m))
 
 """
+    baseincrel(m::Mesh, tag::String)
+
+Retrieve the base incidence relation for the mesh distinguished by its tag.
+"""
+baseincrel(m::Mesh, tag::String) = increl(m, basecode(m), tag)
+
+"""
     geometry(m::Mesh)
 
 Retrieve the geometry attribute from the vertices.
