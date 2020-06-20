@@ -5,7 +5,7 @@
 - Documenter used to generate documentation:
 pkg"add DocumenterTools"  
 using DocumenterTools
-DocumenterTools.genkeys(user="PetrKryslUCSD", repo="git@github.com:PetrKryslUCSD/MeshSteward.jl.git")
+DocumenterTools.genkeys(user="PetrKryslUCSD", repo="git@github.com:PetrKryslUCSD/Elfel.jl.git")
 
 and follow the instructions to install the keys.
 
