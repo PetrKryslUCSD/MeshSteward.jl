@@ -48,7 +48,6 @@ end
 Load a mesh (incidence relation) from a MESH file.
 
 !!! note
-
 No check is performed that the loaded incidence relation is compatible with the
 existing incidence relations in the mesh.
 """
