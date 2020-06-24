@@ -73,3 +73,73 @@ end
 end
 using .mq4gen3
 mq4gen3.test()
+
+module mq4gen4
+using StaticArrays
+using MeshCore: nshapes
+using MeshSteward: vtkwrite
+using MeshSteward: export_MESH
+using MeshSteward: Q4quadrilateral
+using Test
+function test()
+    connectivity = Q4quadrilateral([1.0 0.0; 1.5 1.7; -0.5 0.9; -0.1 -0.1], 3, 4)
+    # @show (nshapes(connectivity.right), nshapes(connectivity.left))
+    @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (20, 12)
+    vtkwrite("mq4gen4", connectivity)
+    try rm("mq4gen4.vtu"); catch end
+    export_MESH("mq4gen4", connectivity)
+    try rm("mq4gen4.mesh"); catch end
+    try rm("mq4gen4-xyz.dat"); catch end
+    try rm("mq4gen4-conn.dat"); catch end
+    true
+end
+end
+using .mq4gen4
+mq4gen4.test()
+
+
+module mq4gen5
+using StaticArrays
+using MeshCore: nshapes
+using MeshSteward: vtkwrite
+using MeshSteward: export_MESH
+using MeshSteward: Q4quadrilateral
+using Test
+function test()
+    connectivity = Q4quadrilateral([1.0 0.0; 1.5 1.7], 6, 4)
+    # @show (nshapes(connectivity.right), nshapes(connectivity.left))
+    @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (35, 24)
+    vtkwrite("mq4gen5", connectivity)
+    try rm("mq4gen5.vtu"); catch end
+    export_MESH("mq4gen5", connectivity)
+    try rm("mq4gen5.mesh"); catch end
+    try rm("mq4gen5-xyz.dat"); catch end
+    try rm("mq4gen5-conn.dat"); catch end
+    true
+end
+end
+using .mq4gen5
+mq4gen5.test()
+
+module mq4gen6
+using StaticArrays
+using MeshCore: nshapes
+using MeshSteward: vtkwrite
+using MeshSteward: export_MESH
+using MeshSteward: Q4quadrilateral
+using Test
+function test()
+    connectivity = Q4quadrilateral([1.0 0.0 0.0; 1.5 1.7 -0.1; 2.1 1.7 0.5; -1.0 1.0 0.3], 6, 4)
+    # @show (nshapes(connectivity.right), nshapes(connectivity.left))
+    @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (35, 24)
+    vtkwrite("mq4gen6", connectivity)
+    try rm("mq4gen6.vtu"); catch end
+    export_MESH("mq4gen6", connectivity)
+    try rm("mq4gen6.mesh"); catch end
+    try rm("mq4gen6-xyz.dat"); catch end
+    try rm("mq4gen6-conn.dat"); catch end
+    true
+end
+end
+using .mq4gen6
+mq4gen6.test()

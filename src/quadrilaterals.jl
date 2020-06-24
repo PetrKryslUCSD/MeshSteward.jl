@@ -5,6 +5,7 @@ using MeshCore: VecAttrib
 using MeshCore: shapedesc, nshapes,  IncRel
 using MeshCore: ShapeColl
 using LinearAlgebra: norm
+using StaticArrays
 
 """
     Q4blockx(xs::Vector{T}, ys::Vector{T}; intbytes = 8) where {T}
@@ -72,4 +73,45 @@ See also: Q4blockx
 function Q4block(Length, Width, nL, nW; kwargs...)
     return Q4blockx(collect(linearspace(0.0, Length, nL+1)),
                     collect(linearspace(0.0, Width, nW+1)); kwargs...);
+end
+
+"""
+    Q4quadrilateral(xyz::Matrix{T}, nL, nW) where {T}
+
+Mesh of a general quadrilateral given by the location of the vertices.
+"""
+function Q4quadrilateral(xyz::Matrix{T}, nL, nW) where {T}
+    npts = size(xyz,1);
+    if npts == 2 # In this case the quadrilateral must be defined in two dimensions
+        lo = minimum(xyz, dims = 1);
+        hi = maximum(xyz, dims = 1);
+        xyz = [[lo[1] lo[2]];
+            [hi[1] lo[2]];
+            [hi[1] hi[2]];
+            [lo[1] hi[2]]];
+    elseif npts != 4
+        error("Need 2 or 4 points");
+    end
+
+    # Generate elements and vertices in a 2D square
+    ir = Q4block(2.0,2.0,nL,nW);
+
+    function bfun(param_coords) 
+        return SMatrix{4, 1}([0.25 * (1. - param_coords[1]) * (1. - param_coords[2]);
+               0.25 * (1. + param_coords[1]) * (1. - param_coords[2]);
+               0.25 * (1. + param_coords[1]) * (1. + param_coords[2]);
+               0.25 * (1. - param_coords[1]) * (1. + param_coords[2])]);
+    end
+
+    # Remap the quadrilateral mesh to the physical coordinates
+    locs = ir.right.attributes["geom"];
+    N, TC = size(xyz, 2), eltype(locs[1])
+    v = SVector{N, TC}[]
+    for i = 1:length(locs)
+        bfv = bfun([locs[i][1]-1.0, locs[i][2]-1.0]);# shift coordinates by -1
+        push!(v, SVector{N, TC}(bfv'*xyz));
+    end
+    nlocs =  VecAttrib(v)
+    ir.right.attributes["geom"] = nlocs
+    return ir
 end
