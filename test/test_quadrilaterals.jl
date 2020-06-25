@@ -143,3 +143,35 @@ end
 end
 using .mq4gen6
 mq4gen6.test()
+
+module mq4gen7
+using StaticArrays
+using MeshCore: nshapes
+using MeshSteward: vtkwrite
+using MeshSteward: export_MESH
+using MeshSteward: Q4quadrilateral, mergeirs
+using Test
+function test()
+    N = 2
+    c1 = Q4quadrilateral([-1 -1; -0.2 -1; -0.1 -0.2; -1 0.8], N, N)
+    c2 = Q4quadrilateral([-0.2 -1; 1 -1; 1 -0.5; -0.1 -0.2], N, N)
+    c3 = Q4quadrilateral([1 -0.5; 1 1; 0.3 1; -0.1 -0.2], N, N)
+    c4 = Q4quadrilateral([0.3 1; -1 1; -1 0.8; -0.1 -0.2], N, N)
+    c  = mergeirs(c1, c2, 0.001)
+    c  = mergeirs(c, c3, 0.001)
+    c  = mergeirs(c, c4, 0.001)
+    @test nshapes(c.left) == 4 * N ^ 2
+    
+    vtkwrite("mq4gen7", c)
+    # try rm("mq4gen7.vtu"); catch end
+    # export_MESH("mq4gen7", connectivity)
+    # try rm("mq4gen7.mesh"); catch end
+    # try rm("mq4gen7-xyz.dat"); catch end
+    # try rm("mq4gen7-conn.dat"); catch end
+    true
+end
+end
+using .mq4gen7
+mq4gen7.test()
+
+
