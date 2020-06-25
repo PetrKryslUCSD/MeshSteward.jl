@@ -152,16 +152,16 @@ function _fusen(xyz1, id1, xyz2, id2, tolerance)
             xyzm[rx,cx] = xyz2[rx,cx];
         end
     end
-    idm = zeros(eltype(id1),nn1+nn2);
-    for rx = 1:nn2
-        idm[rx] = rx;
-    end
+    # idm = zeros(eltype(id1),nn1+nn2);
+    # for rx = 1:nn2
+    #     idm[rx] = rx;
+    # end
     mid=nn2+1;
     # ...and then we add in only non-duplicated nodes from the first set
     for i=1:nn1
         if id1[i]>0
             id1[i] = mid;
-            idm[mid] = mid;
+            # idm[mid] = mid;
             for cx = 1:dim
                 xyzm[mid,cx] = xyz1[i,cx];
             end
@@ -225,7 +225,22 @@ function fusevertices(locs1, locs2, tolerance)
 end
 
 """
-    renumberconn!(ir, new_numbering)
+    withvertices(ir, locs)
+
+Create a new incidence relation referring to a different set of vertices.
+
+Presumably the set of vertices is simply broadened from the one used by the
+incidence relation `ir`.
+"""
+function withvertices(ir, locs)
+    vertices = ShapeColl(P1, length(locs), "vertices")
+    vertices.attributes["geom"] = locs
+    elements = ShapeColl(shapedesc(ir.left), nrelations(ir), "elements")
+    return IncRel(elements, vertices, [retrieve(ir, idx) for idx in 1:nrelations(ir)])
+end
+
+"""
+    renumbered(ir, new_numbering)
 
 Renumber the connectivity of the shapes based on a new numbering for the
 vertices.
@@ -233,6 +248,11 @@ vertices.
 - `new_numbering` = new serial numbers for the vertices.  The connectivity
           should be changed as `conn[j]` --> `new_numbering[conn[j]]`
 
+Returns new incidence relation with renumbered connectivity.
+
+# Example
+
+To do: Revise this example.
 Let us say there are nodes not connected to any finite element that you would
 like to remove from the mesh: here is how that would be accomplished.
 ```
@@ -245,7 +265,7 @@ Finally, check that the mesh is valid:
 validate_mesh(fens, fes);
 ```
 """
-function renumberconn!(ir, new_numbering)
+function renumbered(ir, new_numbering)
     N = nentities(ir, 1)
     C = SVector{N, indextype(ir)}[]
     for i in 1:nrelations(ir)
@@ -275,6 +295,7 @@ function cat(ir1::T, ir2::T) where {T<:IncRel}
     # The shape collections must refer to the same set of vertices. The length
     # is a cheap proxy for checking that condition.
     @_check length(ir1.right.attributes["geom"]) == length(ir2.right.attributes["geom"])
+    # The shape collections must have fixed cardinality.
     N = nentities(ir1, 1)
     C = SVector{N, indextype(ir1)}[]
     for i in 1:nrelations(ir1)
@@ -288,4 +309,19 @@ function cat(ir1::T, ir2::T) where {T<:IncRel}
     vertices.attributes["geom"] = locs
     elements = ShapeColl(shapedesc(ir1.left), length(C), "elements")
     return IncRel(elements, vertices, C)
+end
+
+"""
+    mergeirs(conn1, conn2, tolerance = eps())
+
+Merge two incidence relations, fuse vertices closer then tolerance.
+"""
+function mergeirs(conn1, conn2, tolerance = eps())
+    locs1 = conn1.right.attributes["geom"]
+    locs2 = conn2.right.attributes["geom"]
+    nlocs1, ni1 = fusevertices(locs1, locs2, tolerance)
+    conn1 = withvertices(conn1, nlocs1)
+    conn2 = withvertices(conn2, nlocs1)
+    conn1 = renumbered(conn1, ni1)
+    return cat(conn1, conn2)
 end

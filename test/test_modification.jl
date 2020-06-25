@@ -19,7 +19,7 @@ function test()
     @test nshapes(connectivity3.right) == 42
 
     vtkwrite("mmodt6gen4", connectivity3)
-    # try rm("mmodt6gen4.vtu"); catch end
+    try rm("mmodt6gen4.vtu"); catch end
     true
 end
 end
@@ -30,40 +30,108 @@ module mmodt6gen5
 using StaticArrays
 using MeshCore: nshapes
 using MeshSteward: vtkwrite, summary
-using MeshSteward: Q4block, transform, fusevertices, cat, renumberconn!
+using MeshSteward: Q4block, transform, fusevertices, cat, renumbered, withvertices
 using MeshSteward: vconnected, vnewnumbering, compactify
 using Test
 function test()
-    @show conn1 = Q4block(2.0, 0.75*pi, 3, 2)
-    @show conn2 = Q4block(3.0, 0.75*pi, 2, 2)
+    conn1 = Q4block(2.0, 0.75*pi, 13, 12)
+    conn2 = Q4block(3.0, 0.75*pi, 7, 12)
     transform(conn2, x -> [x[1]+2, x[2]])
     # vtkwrite("mmodt6gen5-1", conn1)
     # vtkwrite("mmodt6gen5-2", conn2)
-    @show locs1 = conn1.right.attributes["geom"]
-    @show locs2 = conn2.right.attributes["geom"]
+    locs1 = conn1.right.attributes["geom"]
+    locs2 = conn2.right.attributes["geom"]
     tolerance = 1.0e-3
     nlocs1, ni1 = fusevertices(locs1, locs2, tolerance)
-    @show ni1
-    conn1.right.attributes["geom"] = nlocs1
-    renumberconn!(conn1, ni1)
-    conn2.right.attributes["geom"] = nlocs1
-    vtkwrite("mmodt6gen5-1", conn1)
-    vtkwrite("mmodt6gen5-2", conn2)
+    conn1 = withvertices(conn1, nlocs1)
+    conn2 = withvertices(conn2, nlocs1)
+    conn1 = renumbered(conn1, ni1)
+    @test summary(conn1) == "(elements, vertices): elements = 156 x Q4, vertices = 273 x P1 {geom,}"
+    @test summary(conn2) == "(elements, vertices): elements = 84 x Q4, vertices = 273 x P1 {geom,}" 
+    # vtkwrite("mmodt6gen5-1", conn1)
+    # vtkwrite("mmodt6gen5-2", conn2)
     
     connectivity = cat(conn1, conn2)
-    @show summary(conn1)
-    @show summary(conn2)
-    @show summary(connectivity)
     locs = connectivity.right.attributes["geom"]
     for i in 1:length(locs)
         r, a = locs[i][1]+2.7, locs[i][2]
         locs[i] = (cos(a)*r, sin(a)*r)
     end
 
-    vtkwrite("mmodt6gen5", connectivity)
+    # vtkwrite("mmodt6gen5", connectivity)
     # try rm("mmodt6gen5.vtu"); catch end
     true
 end
 end
 using .mmodt6gen5
 mmodt6gen5.test()
+
+module mmodt6gen6
+using StaticArrays
+using MeshCore: nshapes
+using MeshSteward: vtkwrite, summary
+using MeshSteward: Q4block, transform, fusevertices, cat, renumbered, withvertices
+using MeshSteward: vconnected, vnewnumbering, compactify
+using Test
+function test()
+    conn1 = Q4block(2.0, 0.75*pi, 13, 12)
+    conn2 = Q4block(3.0, 0.75*pi, 7, 12)
+    transform(conn2, x -> [x[1]+2, x[2]])
+    # vtkwrite("mmodt6gen6-1", conn1)
+    # vtkwrite("mmodt6gen6-2", conn2)
+    locs1 = conn1.right.attributes["geom"]
+    locs2 = conn2.right.attributes["geom"]
+    tolerance = 1.0e-3
+    nlocs1, ni1 = fusevertices(locs1, locs2, tolerance)
+    conn1 = withvertices(conn1, nlocs1)
+    conn2 = withvertices(conn2, nlocs1)
+    conn1 = renumbered(conn1, ni1)
+    @test summary(conn1) == "(elements, vertices): elements = 156 x Q4, vertices = 273 x P1 {geom,}"
+    @test summary(conn2) == "(elements, vertices): elements = 84 x Q4, vertices = 273 x P1 {geom,}" 
+    # vtkwrite("mmodt6gen6-1", conn1)
+    # vtkwrite("mmodt6gen6-2", conn2)
+    
+    connectivity = cat(conn1, conn2)
+    transform(connectivity, x -> begin
+        r, a = x[1]+2.7, x[2]
+        [cos(a)*r, sin(a)*r]
+    end)
+    # locs = connectivity.right.attributes["geom"]
+    # for i in 1:length(locs)
+    #     r, a = locs[i][1]+2.7, locs[i][2]
+    #     locs[i] = (cos(a)*r, sin(a)*r)
+    # end
+
+    vtkwrite("mmodt6gen6", connectivity)
+    try rm("mmodt6gen6.vtu"); catch end
+    true
+end
+end
+using .mmodt6gen6
+mmodt6gen6.test()
+
+module mmodt6gen7
+using StaticArrays
+using MeshCore: nshapes
+using MeshSteward: vtkwrite, summary
+using MeshSteward: Q4block, transform, fusevertices, cat, renumbered, withvertices
+using MeshSteward: vconnected, vnewnumbering, compactify, mergeirs
+using Test
+function test()
+    conn1 = Q4block(2.0, 0.75*pi, 13, 12)
+    conn2 = Q4block(3.0, 0.75*pi, 7, 12)
+    transform(conn2, x -> [x[1]+2, x[2]])
+    connectivity  = mergeirs(conn1, conn2, 0.001)
+    
+    transform(connectivity, x -> begin
+        r, a = x[1]+2.7, x[2]
+        [cos(a)*r, sin(a)*r]
+    end)
+
+    vtkwrite("mmodt6gen7", connectivity)
+    try rm("mmodt6gen7.vtu"); catch end
+    true
+end
+end
+using .mmodt6gen7
+mmodt6gen7.test()
