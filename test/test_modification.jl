@@ -34,18 +34,22 @@ using MeshSteward: Q4block, transform, fusevertices, cat, renumberconn!
 using MeshSteward: vconnected, vnewnumbering, compactify
 using Test
 function test()
-    conn1 = Q4block(2.0, 0.75*pi, 6, 5)
-    conn2 = Q4block(3.0, 0.75*pi, 9, 5)
+    @show conn1 = Q4block(2.0, 0.75*pi, 3, 2)
+    @show conn2 = Q4block(3.0, 0.75*pi, 2, 2)
     transform(conn2, x -> [x[1]+2, x[2]])
     # vtkwrite("mmodt6gen5-1", conn1)
     # vtkwrite("mmodt6gen5-2", conn2)
-    locs1 = conn1.right.attributes["geom"]
-    locs2 = conn2.right.attributes["geom"]
+    @show locs1 = conn1.right.attributes["geom"]
+    @show locs2 = conn2.right.attributes["geom"]
     tolerance = 1.0e-3
-    nlocs1, new_indexes_of_set1_nodes = fusevertices(locs1, locs2, tolerance)
+    nlocs1, ni1 = fusevertices(locs1, locs2, tolerance)
+    @show ni1
     conn1.right.attributes["geom"] = nlocs1
-    renumberconn!(conn1, new_indexes_of_set1_nodes)
+    renumberconn!(conn1, ni1)
     conn2.right.attributes["geom"] = nlocs1
+    vtkwrite("mmodt6gen5-1", conn1)
+    vtkwrite("mmodt6gen5-2", conn2)
+    
     connectivity = cat(conn1, conn2)
     @show summary(conn1)
     @show summary(conn2)

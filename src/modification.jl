@@ -203,7 +203,6 @@ needs to be updated to refer to the same nodes in  the set `fens` as
      `updateconn!(fes, new_indexes_of_fens1_nodes);`
 """
 function fusevertices(locs1, locs2, tolerance)
-    @_check length(locs1) == length(locs2)
     @_check length(locs1[1]) == length(locs2[1])
     dim = length(locs1[1]);
     nn1 = length(locs1)
@@ -213,7 +212,7 @@ function fusevertices(locs1, locs2, tolerance)
     for i in 1:length(locs1)
         xyz1[i, :] = locs1[i]
     end
-    xyz2 = zeros(eltype(locs2[1]),nn1,dim); 
+    xyz2 = zeros(TC,nn2,dim); 
     for i in 1:length(locs2)
         xyz2[i, :] = locs2[i]
     end
