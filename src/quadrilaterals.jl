@@ -80,7 +80,7 @@ end
 
 Mesh of a general quadrilateral given by the location of the vertices.
 """
-function Q4quadrilateral(xyz::Matrix{T}, nL, nW) where {T}
+function Q4quadrilateral(xyz::Matrix{T}, nL, nW; intbytes = 8) where {T}
     npts = size(xyz,1);
     if npts == 2 # In this case the quadrilateral must be defined in two dimensions
         lo = minimum(xyz, dims = 1);
@@ -94,7 +94,7 @@ function Q4quadrilateral(xyz::Matrix{T}, nL, nW) where {T}
     end
 
     # Generate elements and vertices in a 2D square
-    ir = Q4block(2.0,2.0,nL,nW);
+    ir = Q4block(2.0, 2.0, nL, nW; intbytes = intbytes);
 
     function bfun(param_coords) 
         return SMatrix{4, 1}([0.25 * (1. - param_coords[1]) * (1. - param_coords[2]);
@@ -114,4 +114,25 @@ function Q4quadrilateral(xyz::Matrix{T}, nL, nW) where {T}
     nlocs =  VecAttrib(v)
     ir.right.attributes["geom"] = nlocs
     return ir
+end
+
+"""
+    Q4blockwdistortion(Length, Width, nL, nW; intbytes = 8)
+
+Generate mesh of a rectangular block with distorted quadrilaterals.
+"""
+function Q4blockwdistortion(Length, Width, nL, nW; intbytes = 8)
+    nL2 = max(1, Int32(round(nL/2)))
+    nW2 = max(1, Int32(round(nW/2)))
+    c1 = Q4quadrilateral([-1 -1; -0.2 -1; -0.1 -0.2; -1 0.8], nL2, nW2; intbytes = intbytes)
+    c2 = Q4quadrilateral([-0.2 -1; 1 -1; 1 -0.5; -0.1 -0.2], nL2, nW2; intbytes = intbytes)
+    c3 = Q4quadrilateral([-0.1 -0.2; 1 -0.5; 1 1; 0.3 1], nL2, nW2; intbytes = intbytes)
+    c4 = Q4quadrilateral([-1 0.8; -0.1 -0.2; 0.3 1; -1 1], nL2, nW2; intbytes = intbytes)
+    c  = mergeirs(c1, c2, 0.001/max(nL2, nW2))
+    c  = mergeirs(c, c3, 0.001/max(nL2, nW2))
+    c  = mergeirs(c, c4, 0.001/max(nL2, nW2))
+    transform(c, x -> begin
+        [(x[1]+1.0)/2*Length, (x[2]+1.0)/2*Width]
+    end)
+    return c
 end

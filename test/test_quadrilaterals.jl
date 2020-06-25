@@ -174,4 +174,26 @@ end
 using .mq4gen7
 mq4gen7.test()
 
+module mq4gen8
+using StaticArrays
+using MeshCore: nshapes
+using MeshSteward: vtkwrite
+using MeshSteward: export_MESH
+using MeshSteward: Q4blockwdistortion
+using Test
+function test()
+    c1 = Q4blockwdistortion(3.0, 1.0, 15, 6)
+    
+    vtkwrite("mq4gen8", c1)
+    # try rm("mq4gen8.vtu"); catch end
+    # export_MESH("mq4gen8", connectivity)
+    # try rm("mq4gen8.mesh"); catch end
+    # try rm("mq4gen8-xyz.dat"); catch end
+    # try rm("mq4gen8-conn.dat"); catch end
+    true
+end
+end
+using .mq4gen8
+mq4gen8.test()
+
 
