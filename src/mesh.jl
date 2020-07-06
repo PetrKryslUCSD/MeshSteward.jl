@@ -111,6 +111,26 @@ under which this relation is stored in the mesh.
 insert!(m::Mesh, ir::IncRel, tag::String) = (m._increls[(code(ir), tag)] = ir)
 
 """
+    attach!(m::Mesh, increl::IncRel)
+
+Attach the incidence relation under its code and empty tag to the mesh. 
+
+The code of the incidence relation combined with an empty tag (`""`) is the key
+under which this relation is stored in the mesh.
+"""
+attach!(m::Mesh, ir::IncRel) = insert!(m, ir)
+
+"""
+    attach!(m::Mesh, increl::IncRel, tag::String)
+
+Attach the incidence relation under its code and given tag to the mesh. 
+
+The code of the incidence relation combined with the tag is the key
+under which this relation is stored in the mesh.
+"""
+attach!(m::Mesh, ir::IncRel, tag::String) = insert!(m, ir, tag)
+
+"""
     basecode(m::Mesh)
 
 Compute the code of the base relation.

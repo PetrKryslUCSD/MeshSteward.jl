@@ -23,7 +23,8 @@ end
 """
     vconnected(ir)
 
-Find vertices that are not connected to any shape in the incidence relation.
+Find whether or not the vertices are connected to any shape on the left of the
+incidence relation.
 
 - `isconnected` = vector is returned which is for the node `k` either true 
   (vertex `k` is connected), or false (vertex `k` is not connected).
@@ -57,7 +58,7 @@ function vnewnumbering(ir, isconnected)
 end
 
 """
-    compactnodes(fens::FENodeSet, connected::Vector{Bool})
+    compactify(ir, new_numbering)
 
 Compact the finite element node set by deleting unconnected nodes.
 
