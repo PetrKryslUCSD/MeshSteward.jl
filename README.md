@@ -10,6 +10,7 @@ Manages finite element meshes powered by MeshCore.jl
 
 ## News
 
+- 07/06/2020: Exports have been added to facilitate use of the library.
 - 06/17/2020: Key the stored relations with a tuple consisting of the code and a
   string tag.
 - 05/26/2020: First version.
@@ -24,7 +25,18 @@ is enough.
 
 Depends on: `MeshCore`.
 
-## Use
+## Using
+
+The user can either use/import individual functions from MeshCore like so:
+```
+using MeshCore: retrieve, nrelations, nentities
+```
+or all exported symbols maybe made available in the user's context as
+```
+using MeshCore.Exports
+```
+
+## Learning
 
 Please refer to the tutorials in the package `MeshTutor.jl`.
 
