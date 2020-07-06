@@ -23,20 +23,20 @@ The package is registered: doing
 ```
 is enough. 
 
-Depends on: `MeshCore`.
+Depends on: [`MeshCore`](https://github.com/PetrKryslUCSD/MeshCore.jl).
 
 ## Using
 
 The user can either use/import individual functions from MeshCore like so:
 ```
-using MeshCore: retrieve, nrelations, nentities
+using MeshSteward: Mesh, attach!
 ```
 or all exported symbols maybe made available in the user's context as
 ```
-using MeshCore.Exports
+using MeshSteward.Exports
 ```
 
 ## Learning
 
-Please refer to the tutorials in the package `MeshTutor.jl`.
+Please refer to the tutorials in the package [`MeshTutor.jl`](https://github.com/PetrKryslUCSD/MeshTutor.jl).
 
