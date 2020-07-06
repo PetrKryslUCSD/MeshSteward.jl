@@ -27,7 +27,7 @@ Depends on: [`MeshCore`](https://github.com/PetrKryslUCSD/MeshCore.jl).
 
 ## Using
 
-The user can either use/import individual functions from MeshCore like so:
+The user can either use/import individual functions from `MeshSteward` like so:
 ```
 using MeshSteward: Mesh, attach!
 ```
