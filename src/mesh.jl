@@ -53,7 +53,7 @@ existing incidence relations in the mesh.
 """
 function load(m::Mesh, filename::String)
     conns = import_MESH(filename)
-    insert!(m, conns[1])
+    attach!(m, conns[1])
     return m
 end
 
@@ -91,44 +91,24 @@ Retrieve the named incidence relation based on the full key (code + tag).
 increl(m::Mesh, fullirc::Tuple{Tuple{Int64, Int64}, String}) = m._increls[fullirc]
 
 """
-    insert!(m::Mesh, increl::IncRel)
-
-Insert the incidence relation under its code and empty tag. 
-
-The code of the incidence relation combined with an empty tag (`""`) is the key
-under which this relation is stored in the mesh.
-"""
-insert!(m::Mesh, ir::IncRel) = (m._increls[(code(ir), "")] = ir)
-
-"""
-    insert!(m::Mesh, increl::IncRel, tag::String)
-
-Insert the incidence relation under its code and given tag. 
-
-The code of the incidence relation combined with the tag is the key
-under which this relation is stored in the mesh.
-"""
-insert!(m::Mesh, ir::IncRel, tag::String) = (m._increls[(code(ir), tag)] = ir)
-
-"""
     attach!(m::Mesh, increl::IncRel)
 
-Attach the incidence relation under its code and empty tag to the mesh. 
+Attach the incidence relation under its code and empty tag. 
 
 The code of the incidence relation combined with an empty tag (`""`) is the key
 under which this relation is stored in the mesh.
 """
-attach!(m::Mesh, ir::IncRel) = insert!(m, ir)
+attach!(m::Mesh, ir::IncRel) = (m._increls[(code(ir), "")] = ir)
 
 """
     attach!(m::Mesh, increl::IncRel, tag::String)
 
-Attach the incidence relation under its code and given tag to the mesh. 
+Attach the incidence relation under its code and given tag. 
 
 The code of the incidence relation combined with the tag is the key
 under which this relation is stored in the mesh.
 """
-attach!(m::Mesh, ir::IncRel, tag::String) = insert!(m, ir, tag)
+attach!(m::Mesh, ir::IncRel, tag::String) = (m._increls[(code(ir), tag)] = ir)
 
 """
     basecode(m::Mesh)
@@ -255,13 +235,13 @@ The incidents relation is stored in the mesh with the tag "boundary".
 function boundary(m::Mesh)
 	ir = increl(m, basecode(m))
     sir = skeleton(ir, "skeleton") # compute the skeleton of the base incidence relation
-    insert!(m, sir) # insert the skeleton into the mesh
+    attach!(m, sir) # insert the skeleton into the mesh
     # Now construct the boundary incidence relation
     isboundary = sir.left.attributes["isboundary"]
     ind = [i for i in 1:length(isboundary) if isboundary[i]] 
     lft = ShapeColl(shapedesc(sir.left), length(ind), "facets")
     bir = IncRel(lft, sir.right, deepcopy(sir._v[ind]))
-    insert!(m, bir, "boundary")
+    attach!(m, bir, "boundary")
     return bir
 end
 
@@ -287,7 +267,7 @@ function submesh(m::Mesh, list)
     v = [retrieve(ir, idx) for idx in list]
     nir = IncRel(lft, ir.right, v)
     nm = Mesh()
-    return insert!(nm, nir)
+    return attach!(nm, nir)
 end
 
 function _label(sc, list, lab)

@@ -218,7 +218,7 @@ using MeshCore: P1, T4, ShapeColl,  manifdim, nvertices, nridges, nshapes
 using MeshCore: bbyridges, skeleton, bbyfacets, nshifts, _sense
 using MeshCore: IncRel, transpose, nrelations, nentities
 using MeshCore: VecAttrib, attribute, code
-using MeshSteward: Mesh, insert!, increl, basecode 
+using MeshSteward: Mesh, attach!, increl, basecode 
 using ..osamplet4: osamplet4mesh
 using Test
 function test()
@@ -232,7 +232,7 @@ function test()
     ir30 = IncRel(tets, vrts, cc)
 
     mesh = Mesh()
-    insert!(mesh, ir30)
+    attach!(mesh, ir30)
     irc = basecode(mesh)
     @test irc == (3, 0)
 
@@ -252,13 +252,13 @@ using StaticArrays
 using MeshCore: nshapes
 using MeshCore: attribute, nrelations, skeleton
 using MeshSteward: import_NASTRAN, vtkwrite
-using MeshSteward: Mesh, insert!, increl, basecode
+using MeshSteward: Mesh, attach!, increl, basecode
 using Test
 function test()
     connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
     connectivity = connectivities[1]
     mesh = Mesh()
-    insert!(mesh, connectivity)
+    attach!(mesh, connectivity)
     irc = basecode(mesh)
     connectivity = increl(mesh, irc)
     @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (376, 996)
@@ -284,13 +284,13 @@ using StaticArrays
 using MeshCore: nshapes
 using MeshCore: attribute, nrelations, skeleton
 using MeshSteward: import_NASTRAN, vtkwrite, export_MESH
-using MeshSteward: Mesh, insert!, increl, load, basecode, nspacedims
+using MeshSteward: Mesh, attach!, increl, load, basecode, nspacedims
 using Test
 function test()
     connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
     connectivity = connectivities[1]
     mesh = Mesh()
-    insert!(mesh, connectivity)
+    attach!(mesh, connectivity)
     connectivity = increl(mesh, (3, 0))
     @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (376, 996)
     
@@ -316,13 +316,13 @@ using StaticArrays
 using MeshCore: nshapes
 using MeshCore: attribute, nrelations, skeleton
 using MeshSteward: import_NASTRAN, vtkwrite, export_MESH
-using MeshSteward: Mesh, insert!, increl, load, basecode, nspacedims, save
+using MeshSteward: Mesh, attach!, increl, load, basecode, nspacedims, save
 using Test
 function test()
     connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
     connectivity = connectivities[1]
     mesh = Mesh()
-    insert!(mesh, connectivity)
+    attach!(mesh, connectivity)
     save(mesh, "trunc_cyl_shell_0")
     mesh2 = Mesh()
     mesh2 = load(mesh2, "trunc_cyl_shell_0")
@@ -339,7 +339,7 @@ mmeshio4.test()
 
 module mmfind1
 using MeshSteward: boundingbox
-using MeshSteward: Mesh, insert!, increl, load, basecode, nspacedims, save, baseincrel
+using MeshSteward: Mesh, attach!, increl, load, basecode, nspacedims, save, baseincrel
 using MeshSteward: vselect
 using MeshSteward: import_NASTRAN, vtkwrite
 using MeshCore: nshapes
@@ -347,7 +347,7 @@ using Test
 function test()
 	connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
 	mesh = Mesh()
-	insert!(mesh, connectivities[1])
+	attach!(mesh, connectivities[1])
 	# vtkwrite("trunc_cyl_shell_0-elements", baseincrel(mesh))
     selectedv = vselect(mesh, box = boundingbox([-Inf -Inf 0.5; Inf Inf 0.5]), inflate = 0.001)
 	# vtkwrite("trunc_cyl_shell_0-selected-vertices", selectedv)
@@ -359,14 +359,14 @@ mmfind1.test()
 
 module mmbd1
 using MeshSteward: import_NASTRAN, vtkwrite
-using MeshSteward: Mesh, insert!, boundary
+using MeshSteward: Mesh, attach!, boundary
 using MeshSteward: summary
 using Test
 function test()
 	connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
 	connectivity = connectivities[1]
 	mesh = Mesh()
-	insert!(mesh, connectivity)
+	attach!(mesh, connectivity)
 	bir = boundary(mesh) 
     s = summary(mesh)
     vtkwrite("trunc_cyl_shell_0-boundary", bir)
@@ -379,7 +379,7 @@ mmbd1.test()
 
 module mmvtx1
 using MeshSteward: import_NASTRAN, vtkwrite
-using MeshSteward: Mesh, insert!, vertices
+using MeshSteward: Mesh, attach!, vertices
 using MeshSteward: summary
 using MeshCore: nshapes
 using Test
@@ -387,7 +387,7 @@ function test()
     connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
     connectivity = connectivities[1]
     mesh = Mesh()
-    insert!(mesh, connectivity)
+    attach!(mesh, connectivity)
     vir = vertices(mesh) 
     @test nshapes(vir.right) == nshapes(vir.left) 
     @test nshapes(vir.right) == nshapes(connectivity.right) 
@@ -402,7 +402,7 @@ mmvtx1.test()
 
 module mmvtx2
 using MeshSteward: import_NASTRAN, vtkwrite
-using MeshSteward: Mesh, insert!, vertices, submesh
+using MeshSteward: Mesh, attach!, vertices, submesh
 using MeshSteward: summary, basecode, boundary, eselect, label, initbox, updatebox!, baseincrel
 using MeshCore: nshapes, attribute, subset
 using Test
@@ -410,7 +410,7 @@ function test()
     connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
     connectivity = connectivities[1]
     mesh = Mesh()
-    insert!(mesh, connectivity)
+    attach!(mesh, connectivity)
     @test basecode(mesh) == (3, 0)
     vir = vertices(mesh) 
     @test nshapes(vir.right) == nshapes(vir.left) 
@@ -442,7 +442,7 @@ mmvtx2.test()
 
 module mmvtx3
 using MeshSteward: import_NASTRAN, vtkwrite, geometry
-using MeshSteward: Mesh, insert!, vertices, submesh, increl, baseincrel
+using MeshSteward: Mesh, attach!, vertices, submesh, increl, baseincrel
 using MeshSteward: summary, basecode, boundary, eselect, label, initbox, updatebox!, baseincrel
 using MeshCore: nshapes, attribute, subset, code, nrelations
 using Test
@@ -450,7 +450,7 @@ function test()
     connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
     connectivity = connectivities[1]
     mesh = Mesh()
-    insert!(mesh, connectivity)
+    attach!(mesh, connectivity)
     @test basecode(mesh) == (3, 0)
     vir = vertices(mesh) 
     @test nshapes(vir.right) == nshapes(vir.left) 

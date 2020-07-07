@@ -45,7 +45,7 @@ export_MESH
 load
 save
 increl
-insert!
+attach!
 basecode
 nspacedims
 Base.summary
