@@ -18,7 +18,7 @@ mmeshio1.test()
 module mmeshio2
 using StaticArrays
 using MeshCore: nshapes
-using MeshCore: attribute, nrelations, skeleton
+using MeshCore: attribute, nrelations, ir_skeleton
 using MeshSteward: import_NASTRAN, vtkwrite
 using Test
 function test()
@@ -31,7 +31,7 @@ function test()
     vtkwrite("trunc_cyl_shell_0", connectivity)
     try rm("trunc_cyl_shell_0.vtu"); catch end
 
-    ir00 = skeleton(skeleton(skeleton(connectivity)))
+    ir00 = ir_skeleton(ir_skeleton(ir_skeleton(connectivity)))
     @test (nshapes(ir00.right), nshapes(ir00.left)) == (376, 376)
     vtkwrite("trunc_cyl_shell_0-0-skeleton", ir00)
     try rm("trunc_cyl_shell_0-0-skeleton" * ".vtu"); catch end
@@ -44,7 +44,7 @@ mmeshio2.test()
 module mmeshio5
 using StaticArrays
 using MeshCore: nshapes
-using MeshCore: attribute, nrelations, skeleton
+using MeshCore: attribute, nrelations, ir_skeleton
 using MeshSteward: import_NASTRAN, vtkwrite
 using Test
 function test()
@@ -57,7 +57,7 @@ function test()
     vtkwrite("trunc_cyl_shell_0", connectivity)
     try rm("trunc_cyl_shell_0" * ".vtu"); catch end
 
-    ir20 = skeleton(connectivity)
+    ir20 = ir_skeleton(connectivity)
     @test (nshapes(ir20.right), nshapes(ir20.left)) == (376, 2368)
     vtkwrite("trunc_cyl_shell_0-2-skeleton", ir20)
     try rm("trunc_cyl_shell_0-2-skeleton" * ".vtu"); catch end
@@ -70,7 +70,7 @@ mmeshio5.test()
 module mmeshio6
 using StaticArrays
 using MeshCore: nshapes
-using MeshCore: attribute, nrelations, boundary
+using MeshCore: attribute, nrelations, ir_boundary
 using MeshSteward: import_NASTRAN, vtkwrite
 using Test
 function test()
@@ -83,7 +83,7 @@ function test()
     vtkwrite("trunc_cyl_shell_0", connectivity)
     try rm("trunc_cyl_shell_0" * ".vtu"); catch end
 
-    ir20 = boundary(connectivity)
+    ir20 = ir_boundary(connectivity)
     @test (nshapes(ir20.right), nshapes(ir20.left)) == (376, 752)
     vtkwrite("trunc_cyl_shell_0-boundary", ir20)
     try rm("trunc_cyl_shell_0-boundary" * ".vtu"); catch end
@@ -96,7 +96,7 @@ mmeshio6.test()
 module mmeshio7
 using StaticArrays
 using MeshCore: nshapes
-using MeshCore: attribute, nrelations, boundary
+using MeshCore: attribute, nrelations, ir_boundary
 using MeshSteward: import_NASTRAN, vtkwrite
 using Test
 function test()
@@ -109,7 +109,7 @@ function test()
     vtkwrite("trunc_cyl_shell_0", connectivity)
     try rm("trunc_cyl_shell_0" * ".vtu"); catch end
 
-    ir20 = boundary(connectivity)
+    ir20 = ir_boundary(connectivity)
     @test (nshapes(ir20.right), nshapes(ir20.left)) == (376, 752)
     vtkwrite("trunc_cyl_shell_0-boundary", ir20)
     try rm("trunc_cyl_shell_0-boundary" * ".vtu"); catch end
@@ -122,7 +122,7 @@ mmeshio7.test()
 module mmeshio8
 using StaticArrays
 using MeshCore: nshapes
-using MeshCore: attribute, nrelations, boundary
+using MeshCore: attribute, nrelations, ir_boundary
 using MeshSteward: import_MESH, vtkwrite, export_MESH
 using Test
 function test()
@@ -135,7 +135,7 @@ function test()
     vtkwrite("q4-4-2", connectivity)
     try rm("q4-4-2" * ".vtu"); catch end
 
-    ir20 = boundary(connectivity)
+    ir20 = ir_boundary(connectivity)
     @test (nshapes(ir20.right), nshapes(ir20.left)) == (15, 12)
     vtkwrite("q4-4-2-boundary", ir20)
     try rm("q4-4-2-boundary" * ".vtu"); catch end
@@ -153,7 +153,7 @@ mmeshio8.test()
 module mmeshio9
 using StaticArrays
 using MeshCore: nshapes
-using MeshCore: attribute, nrelations, boundary
+using MeshCore: attribute, nrelations, ir_boundary
 using MeshSteward: import_NASTRAN, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
 using Test
@@ -188,7 +188,7 @@ mmeshio9.test()
 module mmeshio10
 using StaticArrays
 using MeshCore: nshapes
-using MeshCore: attribute, nrelations, boundary
+using MeshCore: attribute, nrelations, ir_boundary
 using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
 using Test
@@ -225,7 +225,7 @@ mmeshio10.test()
 module mmeshio11
 using StaticArrays
 using MeshCore: nshapes
-using MeshCore: attribute, nrelations, boundary, VecAttrib
+using MeshCore: attribute, nrelations, ir_boundary, VecAttrib
 using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
 using Test
@@ -251,7 +251,7 @@ mmeshio11.test()
 module mmeshio12
 using StaticArrays
 using MeshCore: nshapes
-using MeshCore: attribute, nrelations, boundary, VecAttrib
+using MeshCore: attribute, nrelations, ir_boundary, VecAttrib
 using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
 using Test
@@ -279,7 +279,7 @@ mmeshio12.test()
 module mmeshio13
 using StaticArrays
 using MeshCore: nshapes, retrieve, nrelations
-using MeshCore: attribute, nrelations, boundary, VecAttrib
+using MeshCore: attribute, nrelations, ir_boundary, VecAttrib
 using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
 using Test
@@ -308,7 +308,7 @@ mmeshio13.test()
 module mmeshio14
 using StaticArrays
 using MeshCore: nshapes, retrieve, nrelations
-using MeshCore: attribute, nrelations, boundary, VecAttrib
+using MeshCore: attribute, nrelations, ir_boundary, VecAttrib
 using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
 using Test
@@ -338,7 +338,7 @@ mmeshio14.test()
 module mmeshio15
 using StaticArrays
 using MeshCore: nshapes, retrieve, nrelations
-using MeshCore: attribute, nrelations, boundary, VecAttrib
+using MeshCore: attribute, nrelations, ir_boundary, VecAttrib
 using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
 using Test

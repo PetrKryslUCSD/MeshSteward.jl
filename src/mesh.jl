@@ -1,6 +1,6 @@
 using MeshCore
-using MeshCore: ShapeColl, IncRel, skeleton
-using MeshCore: shapedesc, nshapes, code, attribute, retrieve
+using MeshCore: ShapeColl, IncRel, ir_skeleton
+using MeshCore: shapedesc, nshapes, ir_code, attribute, retrieve
 import Base.show
 using StaticArrays
 
@@ -98,7 +98,7 @@ Attach the incidence relation under its code and empty tag.
 The code of the incidence relation combined with an empty tag (`""`) is the key
 under which this relation is stored in the mesh.
 """
-attach!(m::Mesh, ir::IncRel) = (m._increls[(code(ir), "")] = ir)
+attach!(m::Mesh, ir::IncRel) = (m._increls[(ir_code(ir), "")] = ir)
 
 """
     attach!(m::Mesh, increl::IncRel, tag::String)
@@ -108,7 +108,7 @@ Attach the incidence relation under its code and given tag.
 The code of the incidence relation combined with the tag is the key
 under which this relation is stored in the mesh.
 """
-attach!(m::Mesh, ir::IncRel, tag::String) = (m._increls[(code(ir), tag)] = ir)
+attach!(m::Mesh, ir::IncRel, tag::String) = (m._increls[(ir_code(ir), tag)] = ir)
 
 """
     basecode(m::Mesh)
@@ -121,7 +121,6 @@ interior of the domain.
 function basecode(m::Mesh)
     maxd = 0
     for irc in keys(m._increls)
-        # Test the `d`
         maxd = max(maxd, irc[1][1])
     end
     return (maxd, 0)
@@ -234,7 +233,7 @@ The incidents relation is stored in the mesh with the tag "boundary".
 """
 function boundary(m::Mesh)
 	ir = increl(m, basecode(m))
-    sir = skeleton(ir, "skeleton") # compute the skeleton of the base incidence relation
+    sir = ir_skeleton(ir, "skeleton") # compute the skeleton of the base incidence relation
     attach!(m, sir) # insert the skeleton into the mesh
     # Now construct the boundary incidence relation
     isboundary = sir.left.attributes["isboundary"]

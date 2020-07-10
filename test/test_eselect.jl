@@ -3,8 +3,8 @@ include("samplet3.jl")
 module mt4topo1e1
 using StaticArrays
 using MeshCore: P1, T3, ShapeColl,  manifdim, nvertices, nshapes, indextype
-using MeshCore: skeleton, retrieve, VecAttrib, nrelations
-using MeshCore: IncRel, transpose, nrelations, nentities, boundary
+using MeshCore: ir_skeleton, retrieve, VecAttrib, nrelations
+using MeshCore: IncRel, ir_transpose, nrelations, nentities, ir_boundary
 using MeshSteward: connectedv, eselect
 using ..samplet3: samplet3mesh
 using Test
@@ -18,7 +18,7 @@ function test()
     ir = IncRel(tris, vrts, cc)
     vl = connectedv(ir)
     @test length(vl) == size(xyz, 1)
-    bir = boundary(ir)
+    bir = ir_boundary(ir)
     bir.right.attributes["geom"] = locs
     el = eselect(bir; box = [0.0, 1.0, 1.0, 1.0], inflate = 0.01)
     for i in el
@@ -43,8 +43,8 @@ mt4topo1e1.test()
 module mt4topo1e2
 using StaticArrays
 using MeshCore: P1, T3, ShapeColl,  manifdim, nvertices, nshapes, indextype
-using MeshCore: skeleton, retrieve, VecAttrib, nrelations
-using MeshCore: IncRel, transpose, nrelations, nentities, boundary
+using MeshCore: ir_skeleton, retrieve, VecAttrib, nrelations
+using MeshCore: IncRel, transpose, nrelations, nentities, ir_boundary
 using MeshSteward: connectedv, eselect
 using ..samplet3: samplet3mesh
 using Test
@@ -58,7 +58,7 @@ function test()
     ir = IncRel(tris, vrts, cc)
     vl = connectedv(ir)
     @test length(vl) == size(xyz, 1)
-    bir = boundary(ir)
+    bir = ir_boundary(ir)
     bir.right.attributes["geom"] = locs
     bir.left.attributes["label"] = VecAttrib([1 for i in 1:nshapes(bir.left)])
 
@@ -97,7 +97,7 @@ mt4topo1e2.test()
 module mmeses1
 using StaticArrays
 using MeshCore: nshapes
-using MeshCore: attribute, nrelations, skeleton, boundary, subset
+using MeshCore: attribute, nrelations, ir_skeleton, ir_boundary, ir_subset
 using MeshSteward: import_NASTRAN, vtkwrite, eselect
 using Test
 function test()
@@ -110,14 +110,14 @@ function test()
     vtkwrite("trunc_cyl_shell_0-search", connectivity)
     try rm("trunc_cyl_shell_0-search.vtu"); catch end
     
-    bir = boundary(connectivity)
+    bir = ir_boundary(connectivity)
     el = eselect(bir; facing = true, direction = x -> [0.0, 0.0, 1.0], dotmin = 0.99)
     @test length(el) == 44
-    vtkwrite("trunc_cyl_shell_0-search-z=top", subset(bir, el))
+    vtkwrite("trunc_cyl_shell_0-search-z=top", ir_subset(bir, el))
     try rm("trunc_cyl_shell_0-search-z=top.vtu"); catch end
     el = eselect(bir; facing = true, direction = x -> [-x[1], -x[2], 0.0], dotmin = 0.99)
     @test length(el) == 304
-    vtkwrite("trunc_cyl_shell_0-search-interior", subset(bir, el))
+    vtkwrite("trunc_cyl_shell_0-search-interior", ir_subset(bir, el))
     try rm("trunc_cyl_shell_0-search-interior.vtu"); catch end
     true
 end
@@ -129,7 +129,7 @@ mmeses1.test()
 module mmeses2
 using StaticArrays
 using MeshCore: P1, T3, ShapeColl,  manifdim, nvertices, nshapes, indextype, IncRel
-using MeshCore: attribute, nrelations, skeleton, boundary, subset, VecAttrib
+using MeshCore: attribute, nrelations, ir_skeleton, ir_boundary, ir_subset, VecAttrib
 using MeshSteward: import_NASTRAN, vtkwrite, eselect, connectedv
 using ..samplet3: samplet3mesh
 using Test
@@ -143,13 +143,13 @@ function test()
     ir = IncRel(tris, vrts, cc)
     vl = connectedv(ir)
     @test length(vl) == size(xyz, 1)
-    bir = boundary(ir)
+    bir = ir_boundary(ir)
     bir.right.attributes["geom"] = locs
     
     el = eselect(bir; facing = true, direction = x -> [-1.0, 0.0], dotmin = 0.99)
     @test length(el) == 3
     vtkwrite("samplet3mesh-search", ir)
-    vtkwrite("samplet3mesh-search-x=0_0", subset(bir, el))
+    vtkwrite("samplet3mesh-search-x=0_0", ir_subset(bir, el))
     try rm("samplet3mesh-search" * ".vtu"); catch end
     try rm("samplet3mesh-search-x=0_0" * ".vtu"); catch end
     true

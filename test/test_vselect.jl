@@ -44,8 +44,8 @@ include("samplet4.jl")
 module mt4topo1
 using StaticArrays
 using MeshCore: P1, T4, ShapeColl,  manifdim, nvertices, nshapes, indextype
-using MeshCore: skeleton, retrieve, VecAttrib
-using MeshCore: IncRel, transpose, nrelations, nentities, boundary
+using MeshCore: retrieve, VecAttrib
+using MeshCore: IncRel, nrelations, nentities, ir_boundary
 using MeshSteward: connectedv
 using ..samplet4: samplet4mesh
 using Test
@@ -59,7 +59,7 @@ function test()
     ir30 = IncRel(tets, vrts, cc)
     vl = connectedv(ir30)
     @test length(vl) == size(xyz, 1)
-    ir20 = boundary(ir30)
+    ir20 = ir_boundary(ir30)
     vl = connectedv(ir20)
     @test length(vl) == 54
     true
@@ -72,8 +72,8 @@ module mt4topv1
 using StaticArrays
 using LinearAlgebra
 using MeshCore: P1, T4, ShapeColl,  manifdim, nvertices, nshapes, indextype
-using MeshCore: skeleton, retrieve, VecAttrib
-using MeshCore: IncRel, transpose, nrelations, nentities, boundary
+using MeshCore: retrieve, VecAttrib
+using MeshCore: IncRel, nrelations, nentities, ir_boundary
 using MeshSteward: connectedv, vselect, vtkwrite
 using ..samplet4: samplet4mesh
 using Test
@@ -106,8 +106,8 @@ module mt4topv2
 using StaticArrays
 using LinearAlgebra
 using MeshCore: P1, T4, ShapeColl,  manifdim, nvertices, nshapes, indextype
-using MeshCore: skeleton, retrieve, VecAttrib
-using MeshCore: IncRel, transpose, nrelations, nentities, boundary
+using MeshCore: retrieve, VecAttrib
+using MeshCore: IncRel, nrelations, nentities, ir_boundary
 using MeshSteward: connectedv, vselect, vtkwrite
 using ..samplet4: samplet4mesh
 using Test
@@ -140,8 +140,8 @@ module mt4topv3
 using StaticArrays
 using LinearAlgebra
 using MeshCore: P1, T4, ShapeColl,  manifdim, nvertices, nshapes, indextype
-using MeshCore: skeleton, retrieve, VecAttrib
-using MeshCore: IncRel, transpose, nrelations, nentities, boundary
+using MeshCore: retrieve, VecAttrib
+using MeshCore: IncRel, nrelations, nentities, ir_boundary
 using MeshSteward: connectedv, vselect, vtkwrite
 using ..samplet4: samplet4mesh
 using Test

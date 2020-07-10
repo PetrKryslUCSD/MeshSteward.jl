@@ -215,9 +215,9 @@ end
 module mt4mesh1
 using StaticArrays
 using MeshCore: P1, T4, ShapeColl,  manifdim, nvertices, nridges, nshapes
-using MeshCore: bbyridges, skeleton, bbyfacets, nshifts, _sense
+using MeshCore: ir_bbyridges, ir_skeleton, ir_bbyfacets, nshifts, _sense
 using MeshCore: IncRel, transpose, nrelations, nentities
-using MeshCore: VecAttrib, attribute, code
+using MeshCore: VecAttrib, attribute, ir_code
 using MeshSteward: Mesh, attach!, increl, basecode 
 using ..osamplet4: osamplet4mesh
 using Test
@@ -250,7 +250,7 @@ mt4mesh1.test()
 module mmeshio2a
 using StaticArrays
 using MeshCore: nshapes
-using MeshCore: attribute, nrelations, skeleton
+using MeshCore: attribute, nrelations, ir_skeleton
 using MeshSteward: import_NASTRAN, vtkwrite
 using MeshSteward: Mesh, attach!, increl, basecode
 using Test
@@ -269,7 +269,7 @@ function test()
     vtkwrite("trunc_cyl_shell_0", connectivity)
     try rm("trunc_cyl_shell_0" * ".vtu"); catch end
 
-    connectivity0 = skeleton(skeleton(skeleton(connectivity)))
+    connectivity0 = ir_skeleton(ir_skeleton(ir_skeleton(connectivity)))
     @test (nshapes(connectivity0.right), nshapes(connectivity0.left)) == (376, 376)
     vtkwrite("trunc_cyl_shell_0-boundary-skeleton", connectivity0)
     try rm("trunc_cyl_shell_0-boundary-skeleton" * ".vtu"); catch end
@@ -282,7 +282,7 @@ mmeshio2a.test()
 module mmeshio3
 using StaticArrays
 using MeshCore: nshapes
-using MeshCore: attribute, nrelations, skeleton
+using MeshCore: attribute, nrelations, ir_skeleton
 using MeshSteward: import_NASTRAN, vtkwrite, export_MESH
 using MeshSteward: Mesh, attach!, increl, load, basecode, nspacedims
 using Test
@@ -314,7 +314,7 @@ mmeshio3.test()
 module mmeshio4
 using StaticArrays
 using MeshCore: nshapes
-using MeshCore: attribute, nrelations, skeleton
+using MeshCore: attribute, nrelations, ir_skeleton
 using MeshSteward: import_NASTRAN, vtkwrite, export_MESH
 using MeshSteward: Mesh, attach!, increl, load, basecode, nspacedims, save
 using Test
@@ -404,7 +404,7 @@ module mmvtx2
 using MeshSteward: import_NASTRAN, vtkwrite
 using MeshSteward: Mesh, attach!, vertices, submesh
 using MeshSteward: summary, basecode, boundary, eselect, label, initbox, updatebox!, baseincrel
-using MeshCore: nshapes, attribute, subset
+using MeshCore: nshapes, attribute, ir_subset
 using Test
 function test()
     connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
@@ -431,7 +431,7 @@ function test()
     # @test length(el) == 44
     @test summary(mesh) == "Mesh mesh: ((3, 0), \"\") = (elements, vertices): elements = 996 x T4 {label,}, vertices = 376 x P1 {geom,}; "
     # vtkwrite("trunc_cyl_shell_0-full", ir)
-    # vtkwrite("trunc_cyl_shell_0-subset", subset(ir, el))
+    # vtkwrite("trunc_cyl_shell_0-subset", ir_subset(ir, el))
     # try rm("trunc_cyl_shell_0-vertices" * ".vtu"); catch end
     return true
 end
@@ -444,7 +444,7 @@ module mmvtx3
 using MeshSteward: import_NASTRAN, vtkwrite, geometry
 using MeshSteward: Mesh, attach!, vertices, submesh, increl, baseincrel
 using MeshSteward: summary, basecode, boundary, eselect, label, initbox, updatebox!, baseincrel
-using MeshCore: nshapes, attribute, subset, code, nrelations
+using MeshCore: nshapes, attribute, ir_subset, ir_code, nrelations
 using Test
 function test()
     connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
@@ -473,12 +473,12 @@ function test()
     @test nrelations(halfmesh) == 498
 
     bir = boundary(mesh)
-    bir2 = increl(mesh, (code(bir), "boundary"))
+    bir2 = increl(mesh, (ir_code(bir), "boundary"))
     @test summary(bir) == summary(bir2)
     # @test length(el) == 44
     # @show  summary(mesh)
     # vtkwrite("trunc_cyl_shell_0-full", ir)
-    # vtkwrite("trunc_cyl_shell_0-subset", subset(ir, el))
+    # vtkwrite("trunc_cyl_shell_0-subset", ir_subset(ir, el))
     try rm("trunc_cyl_shell_0-full" * ".vtu"); catch end
     try rm("trunc_cyl_shell_0-subset" * ".vtu"); catch end
     try rm("trunc_cyl_shell_0-vertices" * ".vtu"); catch end
@@ -490,7 +490,7 @@ mmvtx3.test()
 
 
 module mmvtx4
-using MeshCore: nshapes, attribute, subset, code, nrelations
+using MeshCore: nshapes, attribute, ir_subset, ir_code, nrelations
 using MeshSteward.Exports
 using Test
 function test()
@@ -520,12 +520,12 @@ function test()
     @test nrelations(halfmesh) == 498
 
     bir = boundary(mesh)
-    bir2 = increl(mesh, (code(bir), "boundary"))
+    bir2 = increl(mesh, (ir_code(bir), "boundary"))
     @test summary(bir) == summary(bir2)
     # @test length(el) == 44
     # @show  summary(mesh)
     # vtkwrite("trunc_cyl_shell_0-full", ir)
-    # vtkwrite("trunc_cyl_shell_0-subset", subset(ir, el))
+    # vtkwrite("trunc_cyl_shell_0-subset", ir_subset(ir, el))
     try rm("trunc_cyl_shell_0-full" * ".vtu"); catch end
     try rm("trunc_cyl_shell_0-subset" * ".vtu"); catch end
     try rm("trunc_cyl_shell_0-vertices" * ".vtu"); catch end

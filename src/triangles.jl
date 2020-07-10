@@ -3,7 +3,7 @@ using WriteVTK
 using MeshCore: AbsShapeDesc, P1, L2, T3, Q4, T4, H8, T6 
 using MeshCore: VecAttrib, @_check, datavaluetype
 using MeshCore: shapedesc, nshapes, IncRel
-using MeshCore: ShapeColl, skeleton, bbyfacets, nshapes, retrieve
+using MeshCore: ShapeColl, ir_skeleton, ir_bbyfacets, nshapes, retrieve
 using LinearAlgebra: norm
 
 
@@ -98,8 +98,8 @@ Convert three node triangles (T3) to six node triangles (T6).
 function T3toT6(ir)
     @_check shapedesc(ir.left) == T3
     locs = ir.right.attributes["geom"]
-    sk = skeleton(ir)  # skeleton consists of edges
-    bf = bbyfacets(ir, sk) # edges bounding triangles
+    sk = ir_skeleton(ir)  # skeleton consists of edges
+    bf = ir_bbyfacets(ir, sk) # edges bounding triangles
     n = nshapes(ir.right) # number of vertices in the three-node triangle mesh
     med = [idx+n for idx in 1:nshapes(sk.left)] 
     C = fill(zero(indextype(ir)), nshapes(ir.left), 6)
