@@ -41,7 +41,6 @@ end
 
 """
 !!! note
-
 The arrays are reallocated as the data is read from files. The size of the
 arrays is increased by this much. If the number of entities to be read  is
 large, the CHUNK should be probably increased so that only a few reallocations
