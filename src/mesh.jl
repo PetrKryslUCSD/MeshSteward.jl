@@ -98,7 +98,9 @@ Attach the incidence relation under its code and empty tag.
 The code of the incidence relation combined with an empty tag (`""`) is the key
 under which this relation is stored in the mesh.
 """
-attach!(m::Mesh, ir::IncRel) = (m._increls[(ir_code(ir), "")] = ir)
+function attach!(m::Mesh, ir::IncRel) 
+    return attach!(m, ir, "")
+end
 
 """
     attach!(m::Mesh, increl::IncRel, tag::String)
@@ -108,7 +110,10 @@ Attach the incidence relation under its code and given tag.
 The code of the incidence relation combined with the tag is the key
 under which this relation is stored in the mesh.
 """
-attach!(m::Mesh, ir::IncRel, tag::String) = (m._increls[(ir_code(ir), tag)] = ir)
+function attach!(m::Mesh, ir::IncRel, tag::String) 
+    m._increls[(ir_code(ir), tag)] = ir
+    return m
+end
 
 """
     basecode(m::Mesh)
