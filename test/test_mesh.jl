@@ -470,7 +470,7 @@ function test()
 
     halfmesh = submesh(mesh, el)
     # @show  summary(halfmesh)
-    @test nrelations(halfmesh) == 498
+    @test nrelations(baseincrel(halfmesh)) == 498
 
     bir = boundary(mesh)
     bir2 = increl(mesh, (ir_code(bir), "boundary"))
@@ -517,7 +517,7 @@ function test()
 
     halfmesh = submesh(mesh, el)
     # @show  summary(halfmesh)
-    @test nrelations(halfmesh) == 498
+    @test nrelations(baseincrel(halfmesh)) == 498
 
     bir = boundary(mesh)
     bir2 = increl(mesh, (ir_code(bir), "boundary"))

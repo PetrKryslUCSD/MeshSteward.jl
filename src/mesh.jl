@@ -53,8 +53,7 @@ existing incidence relations in the mesh.
 """
 function load(m::Mesh, filename::String)
     conns = import_MESH(filename)
-    attach!(m, conns[1])
-    return m
+    return attach!(m, conns[1])
 end
 
 """
@@ -220,7 +219,7 @@ end
 
 Select vertices. Return as an incidence relation.
 
-Refer to MeshFinder `vselect`.
+Refer to `vselect` that works with the geometry attribute.
 """
 function vselect(m::Mesh; kwargs...)
 	ir = increl(m, basecode(m))
