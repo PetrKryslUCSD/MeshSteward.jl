@@ -166,33 +166,6 @@ function geometry(m::Mesh)
 end
 
 """
-    Base.summary(ir::IncRel)
-
-Form a brief summary of the incidence relation.
-"""
-function Base.summary(ir::IncRel)
-    return "$(ir.name): " * summary(ir.left) * ", " * summary(ir.right) 
-end
-
-"""
-    Base.summary(sc::S) where {S<:ShapeColl}
-
-Form a brief summary of the shape collection.
-"""
-function Base.summary(sc::S) where {S<:ShapeColl}
-    s = "$(sc.name) = $(nshapes(sc)) x $(shapedesc(sc).name)"
-    if !isempty(values(sc.attributes))
-        s = s * " {"
-        for k in keys(sc.attributes)
-            s = s * k * ","
-        end
-        s = s * "}"
-    end
-    
-    return s
-end
-
-"""
     Base.summary(m::Mesh)
 
 Form a brief summary of the mesh.
@@ -211,7 +184,7 @@ end
 Form a brief summary of the mesh.
 """
 function Base.summary(io::IO, m::Mesh)
-    println(summary(m))
+    print(io, summary(m), "\n")
 end
 
 """
