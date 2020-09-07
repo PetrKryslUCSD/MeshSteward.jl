@@ -1,7 +1,7 @@
 name = "MeshSteward"
 uuid = "ffa89bc3-d1bd-4aea-b9f7-e9902d9f56ab"
 authors = ["Petr Krysl <pkrysl@ucsd.edu>"]
-version = "0.6.0"
+version = "0.6.1"
 
 [deps]
 DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
@@ -13,7 +13,7 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 WriteVTK = "64499a7a-5c06-52f2-abe2-ccb03c286192"
 
 [compat]
-MeshCore = "0.9"
-StaticArrays = "0.12"
-WriteVTK = "1.7"
-julia = "1.4"
+MeshCore = "^0.9"
+StaticArrays = "^0.12"
+WriteVTK = "^1.7"
+julia = "^1.5"

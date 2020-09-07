@@ -1,4 +1,3 @@
-
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Build Status](https://img.shields.io/travis/PetrKryslUCSD/MeshSteward.jl/master.svg?label=Linux+MacOSX+Windows)](https://travis-ci.org/PetrKryslUCSD/MeshSteward.jl)
 [![Coverage Status](https://coveralls.io/repos/github/PetrKryslUCSD/MeshSteward.jl/badge.svg?branch=master)](https://coveralls.io/github/PetrKryslUCSD/MeshSteward.jl?branch=master)
@@ -7,13 +6,6 @@
 # MeshSteward.jl
 
 Manages finite element meshes powered by MeshCore.jl
-
-## News
-
-- 07/06/2020: Exports have been added to facilitate use of the library.
-- 06/17/2020: Key the stored relations with a tuple consisting of the code and a
-  string tag.
-- 05/26/2020: First version.
 
 ## Installation
 
@@ -40,3 +32,10 @@ using MeshSteward.Exports
 
 Please refer to the tutorials in the package [`MeshTutor.jl`](https://github.com/PetrKryslUCSD/MeshTutor.jl).
 
+
+## News
+
+- 07/06/2020: Exports have been added to facilitate use of the library.
+- 06/17/2020: Key the stored relations with a tuple consisting of the code and a
+  string tag.
+- 05/26/2020: First version.
