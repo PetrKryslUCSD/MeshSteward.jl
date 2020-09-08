@@ -33,7 +33,7 @@ function vconnected(ir)
     isconnected = falses(nshapes(ir.right));
     for i in 1:nrelations(ir)
         for j in 1:nentities(ir, i)
-            isconnected[retrieve(ir, i, j)] = true
+            isconnected[ir[i, j]] = true
         end
     end
     return isconnected
@@ -99,7 +99,7 @@ function compactify(ir, new_numbering)
     vertices = ShapeColl(P1, length(locs), "vertices")
     vertices.attributes["geom"] = locs
     # Elements 
-    C = [SVector{3}(retrieve(ir, idx)) for idx in 1:nrelations(ir)] 
+    C = [SVector{3}(ir[idx]) for idx in 1:nrelations(ir)] 
     elements = ShapeColl(shapedesc(ir.left), length(C), "elements")
     return IncRel(elements, vertices, C)
 end
@@ -237,7 +237,7 @@ function withvertices(ir, locs)
     vertices = ShapeColl(P1, length(locs), "vertices")
     vertices.attributes["geom"] = locs
     elements = ShapeColl(shapedesc(ir.left), nrelations(ir), "elements")
-    return IncRel(elements, vertices, [retrieve(ir, idx) for idx in 1:nrelations(ir)])
+    return IncRel(elements, vertices, [ir[idx] for idx in 1:nrelations(ir)])
 end
 
 """
@@ -270,7 +270,7 @@ function renumbered(ir, new_numbering)
     N = nentities(ir, 1)
     C = SVector{N, indextype(ir)}[]
     for i in 1:nrelations(ir)
-        c = retrieve(ir, i)
+        c = ir[i]
         push!(C, SVector{N}(new_numbering[c]))
     end
     locs = ir.right.attributes["geom"]
@@ -300,10 +300,10 @@ function cat(ir1::T, ir2::T) where {T<:IncRel}
     N = nentities(ir1, 1)
     C = SVector{N, indextype(ir1)}[]
     for i in 1:nrelations(ir1)
-        push!(C, retrieve(ir1, i))
+        push!(C, ir1[i])
     end
     for i in 1:nrelations(ir2)
-        push!(C, retrieve(ir2, i))
+        push!(C, ir2[i])
     end
     locs = ir1.right.attributes["geom"]
     vertices = ShapeColl(P1, length(locs), "vertices")

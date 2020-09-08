@@ -3,7 +3,7 @@ include("samplet3.jl")
 module mt4topo1e1
 using StaticArrays
 using MeshCore: P1, T3, ShapeColl,  manifdim, nvertices, nshapes, indextype
-using MeshCore: ir_skeleton, retrieve, VecAttrib, nrelations
+using MeshCore: ir_skeleton, VecAttrib, nrelations
 using MeshCore: IncRel, ir_transpose, nrelations, nentities, ir_boundary
 using MeshSteward: connectedv, eselect
 using ..samplet3: samplet3mesh
@@ -22,14 +22,14 @@ function test()
     bir.right.attributes["geom"] = locs
     el = eselect(bir; box = [0.0, 1.0, 1.0, 1.0], inflate = 0.01)
     for i in el
-        vl = retrieve(bir, i)
+        vl = bir[i]
         for j in vl
             @test isapprox(locs[j][2], 1.0)
         end
     end
     el = eselect(bir; box = [0.0, 0.0, 0.0, 1.0], inflate = 0.01)
     for i in el
-        vl = retrieve(bir, i)
+        vl = bir[i]
         for j in vl
             @test isapprox(locs[j][1], 0.0)
         end
@@ -43,7 +43,7 @@ mt4topo1e1.test()
 module mt4topo1e2
 using StaticArrays
 using MeshCore: P1, T3, ShapeColl,  manifdim, nvertices, nshapes, indextype
-using MeshCore: ir_skeleton, retrieve, VecAttrib, nrelations
+using MeshCore: ir_skeleton,  VecAttrib, nrelations
 using MeshCore: IncRel, transpose, nrelations, nentities, ir_boundary
 using MeshSteward: connectedv, eselect
 using ..samplet3: samplet3mesh
@@ -64,7 +64,7 @@ function test()
 
     el = eselect(bir; box = [0.0, 1.0, 1.0, 1.0], inflate = 0.01)
     for i in el
-        vl = retrieve(bir, i)
+        vl = bir[i]
         for j in vl
             @test isapprox(locs[j][2], 1.0)
         end
@@ -77,7 +77,7 @@ function test()
 
     el = eselect(bir; box = [0.0, 0.0, 0.0, 1.0], inflate = 0.01)
     for i in el
-        vl = retrieve(bir, i)
+        vl = bir[i]
         for j in vl
             @test isapprox(locs[j][1], 0.0)
         end

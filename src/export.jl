@@ -26,7 +26,7 @@ function vtkwrite(filename, connectivity, data = [])
     # Figure out the cell type
     celltype = WriteVTK.VTKCellTypes.VTKCellType(_VTK_TYPE_MAP[shapedesc(connectivity.left)])
     # Prepare an array of the cells
-    cells = [MeshCell(celltype, [j for j in retrieve(connectivity, i)]) for i in 1:nrelations(connectivity)]
+    cells = [MeshCell(celltype, [j for j in connectivity[i]]) for i in 1:nrelations(connectivity)]
     vtkfile = vtk_grid(filename, points, cells, compress=3)
     for nt in data
         an = nt.name # name of the shape collection
@@ -79,7 +79,7 @@ function export_MESH(meshfile, connectivity)
         writedlm(file, X, ' ')
     end
     open(datinfo[3], "w") do file
-        c = [retrieve(connectivity, idx) for idx in 1:nrelations(connectivity)]
+        c = [connectivity[idx] for idx in 1:nrelations(connectivity)]
         writedlm(file, c, ' ')
     end
     open(meshfilebase * ".mesh", "w") do file

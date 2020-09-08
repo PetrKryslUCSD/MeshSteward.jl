@@ -1,6 +1,6 @@
 using LinearAlgebra: norm, dot, cross
 using Statistics: mean
-using MeshCore: IncRel, indextype, nshapes, retrieve, attribute, nentities, nrelations, manifdim, n1storderv
+using MeshCore: IncRel, indextype, nshapes, attribute, nentities, nrelations, manifdim, n1storderv
 
 """
     eselect(ir::IncRel; kwargs...) 
@@ -187,7 +187,7 @@ function eselect(ir::IncRel; kwargs...)
                 (mdim == 2) && ((n1stov == 2) || (n1stov == 3)) "'Facing': shapes with n1stov = $(n1stov)"
         normal = (mdim == 2) ? normal3d : normal2d
         for i in 1:nrelations(ir)
-            c = retrieve(ir, i)
+            c = ir[i]
             n = normal(c, locs, n1stov)
             d = direction(center(c, locs))
             d = d / norm(d)
@@ -208,7 +208,7 @@ function eselect(ir::IncRel; kwargs...)
     allv[vlist] .= true
     for i in 1:nrelations(ir)
         found = 0
-        for nd in retrieve(ir, i)
+        for nd in ir[i]
             if allv[nd]
                 found = found + 1
             end

@@ -3,7 +3,7 @@ using WriteVTK
 using MeshCore: AbsShapeDesc, P1, L2, T3, Q4, T4, H8, T6 
 using MeshCore: VecAttrib, @_check, datavaluetype
 using MeshCore: shapedesc, nshapes, IncRel
-using MeshCore: ShapeColl, ir_skeleton, ir_bbyfacets, nshapes, retrieve
+using MeshCore: ShapeColl, ir_skeleton, ir_bbyfacets, nshapes
 using LinearAlgebra: norm
 
 
@@ -109,12 +109,12 @@ function T3toT6(ir)
         nx[i, :] .= locs[i]
     end
     for i in 1:nshapes(ir.left)
-        C[i, 1:3] .= retrieve(ir, i)
-        ec = abs.(retrieve(bf, i)) # ignore the orientation
+        C[i, 1:3] .= ir[i]
+        ec = abs.(bf[i]) # ignore the orientation
         for (j, w) in enumerate((5, 6, 4))
             en = med[ec[j]]
             C[i, w] = en
-            ev = retrieve(sk, ec[j])
+            ev = sk[ec[j]]
             nx[en, :] = (locs[ev[1]] + locs[ev[2]]) / 2.0
         end
     end
@@ -175,7 +175,7 @@ function T6toT3(ir)
     locs = ir.right.attributes["geom"]
     vertices.attributes["geom"] = locs
     # Elements have only the three corner nodes
-    C = [SVector{3}(retrieve(ir, idx)[1:3]) for idx in 1:nrelations(ir)] 
+    C = [SVector{3}(ir[idx][1:3]) for idx in 1:nrelations(ir)] 
     elements = ShapeColl(T3, length(C), "elements")
     newir = IncRel(elements, vertices, C)
     # Remove unconnected vertices.

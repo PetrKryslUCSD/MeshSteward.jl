@@ -44,7 +44,7 @@ include("samplet4.jl")
 module mt4topo1
 using StaticArrays
 using MeshCore: P1, T4, ShapeColl,  manifdim, nvertices, nshapes, indextype
-using MeshCore: retrieve, VecAttrib
+using MeshCore: VecAttrib
 using MeshCore: IncRel, nrelations, nentities, ir_boundary
 using MeshSteward: connectedv
 using ..samplet4: samplet4mesh
@@ -72,7 +72,7 @@ module mt4topv1
 using StaticArrays
 using LinearAlgebra
 using MeshCore: P1, T4, ShapeColl,  manifdim, nvertices, nshapes, indextype
-using MeshCore: retrieve, VecAttrib
+using MeshCore: VecAttrib
 using MeshCore: IncRel, nrelations, nentities, ir_boundary
 using MeshSteward: connectedv, vselect, vtkwrite
 using ..samplet4: samplet4mesh
@@ -106,7 +106,7 @@ module mt4topv2
 using StaticArrays
 using LinearAlgebra
 using MeshCore: P1, T4, ShapeColl,  manifdim, nvertices, nshapes, indextype
-using MeshCore: retrieve, VecAttrib
+using MeshCore: VecAttrib
 using MeshCore: IncRel, nrelations, nentities, ir_boundary
 using MeshSteward: connectedv, vselect, vtkwrite
 using ..samplet4: samplet4mesh
@@ -140,7 +140,7 @@ module mt4topv3
 using StaticArrays
 using LinearAlgebra
 using MeshCore: P1, T4, ShapeColl,  manifdim, nvertices, nshapes, indextype
-using MeshCore: retrieve, VecAttrib
+using MeshCore: VecAttrib
 using MeshCore: IncRel, nrelations, nentities, ir_boundary
 using MeshSteward: connectedv, vselect, vtkwrite
 using ..samplet4: samplet4mesh

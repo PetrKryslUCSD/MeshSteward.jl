@@ -1,6 +1,6 @@
 using MeshCore
 using MeshCore: ShapeColl, IncRel, ir_skeleton
-using MeshCore: shapedesc, nshapes, ir_code, attribute, retrieve
+using MeshCore: shapedesc, nshapes, ir_code, attribute
 import Base.show
 using StaticArrays
 
@@ -241,7 +241,7 @@ Extract a submesh constructed of a subset of the base relation.
 function submesh(m::Mesh, list)
     ir = increl(m, basecode(m))
     lft = ShapeColl(shapedesc(ir.left), length(list))
-    v = [retrieve(ir, idx) for idx in list]
+    v = [ir[idx] for idx in list]
     nir = IncRel(lft, ir.right, v)
     nm = Mesh()
     return attach!(nm, nir)

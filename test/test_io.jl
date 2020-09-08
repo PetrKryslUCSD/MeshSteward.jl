@@ -278,7 +278,7 @@ mmeshio12.test()
 
 module mmeshio13
 using StaticArrays
-using MeshCore: nshapes, retrieve, nrelations
+using MeshCore: nshapes, nrelations
 using MeshCore: attribute, nrelations, ir_boundary, VecAttrib
 using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
@@ -295,7 +295,7 @@ function test()
     vertices.attributes["dist"] = VecAttrib([norm(geom[i]) for i in 1:length(geom)])
     vertices.attributes["x"] = VecAttrib([geom[i][1] for i in 1:length(geom)])
     
-    connectivity.left.attributes["invdist"] = VecAttrib([1.0/norm(sum(geom[retrieve(connectivity, i)])) for i in 1:nrelations(connectivity)])
+    connectivity.left.attributes["invdist"] = VecAttrib([1.0/norm(sum(geom[connectivity[i]])) for i in 1:nrelations(connectivity)])
     vtkwrite("block-w-hole-mixed", connectivity, [(name = "dist",), (name = "x",), (name = "invdist",)])
     try rm("block-w-hole-mixed" * ".vtu"); catch end
     true
@@ -307,7 +307,7 @@ mmeshio13.test()
 
 module mmeshio14
 using StaticArrays
-using MeshCore: nshapes, retrieve, nrelations
+using MeshCore: nshapes, nrelations
 using MeshCore: attribute, nrelations, ir_boundary, VecAttrib
 using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
@@ -325,7 +325,7 @@ function test()
     vertices.attributes["x"] = VecAttrib([geom[i][1] for i in 1:length(geom)])
     vertices.attributes["v"] = VecAttrib([[geom[i][2], -geom[i][1], 0.0] for i in 1:length(geom)])
     
-    connectivity.left.attributes["invdist"] = VecAttrib([1.0/norm(sum(geom[retrieve(connectivity, i)])) for i in 1:nrelations(connectivity)])
+    connectivity.left.attributes["invdist"] = VecAttrib([1.0/norm(sum(geom[connectivity[i]])) for i in 1:nrelations(connectivity)])
     vtkwrite("block-w-hole-mixed", connectivity, [(name = "dist",), (name = "x",), (name = "invdist",), (name = "v",)])
     try rm("block-w-hole-mixed" * ".vtu"); catch end
     true
@@ -337,7 +337,7 @@ mmeshio14.test()
 
 module mmeshio15
 using StaticArrays
-using MeshCore: nshapes, retrieve, nrelations
+using MeshCore: nshapes, nrelations
 using MeshCore: attribute, nrelations, ir_boundary, VecAttrib
 using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
@@ -355,7 +355,7 @@ function test()
     vertices.attributes["x"] = VecAttrib([geom[i][1] for i in 1:length(geom)])
     vertices.attributes["v"] = VecAttrib([[geom[i][2], -geom[i][1]] for i in 1:length(geom)])
     
-    connectivity.left.attributes["invdist"] = VecAttrib([1.0/norm(sum(geom[retrieve(connectivity, i)])) for i in 1:nrelations(connectivity)])
+    connectivity.left.attributes["invdist"] = VecAttrib([1.0/norm(sum(geom[connectivity[i]])) for i in 1:nrelations(connectivity)])
     vtkwrite("block-w-hole-mixed", connectivity, [(name = "dist",), (name = "x",), (name = "invdist",), (name = "v", allxyz = true)])
     try rm("block-w-hole-mixed" * ".vtu"); catch end
     true

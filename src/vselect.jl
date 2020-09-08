@@ -1,6 +1,6 @@
 using LinearAlgebra: norm, dot, cross
 using Statistics: mean
-using MeshCore: IncRel, indextype, nshapes, retrieve
+using MeshCore: IncRel, indextype, nshapes
 
 """
     selectnode(fens::FENodeSet; kwargs...)
@@ -212,7 +212,7 @@ cell).
 function connectedv(ir::IncRel)
     vl = fill(zero(indextype(ir)), 0)
     for i in 1:nshapes(ir.left)
-        append!(vl, retrieve(ir, i))
+        append!(vl, ir[i])
     end
     return unique(vl);
 end
