@@ -1,6 +1,6 @@
 using Test
 
-@time @testset "Modification" begin include("test_modification.jl") end
+@time @testset "Lines" begin include("test_lines.jl") end
 @time @testset "Quadrilaterals" begin include("test_quadrilaterals.jl") end
 @time @testset "Search elements" begin include("test_eselect.jl") end
 @time @testset "Boxes" begin include("test_boxes.jl") end
@@ -11,5 +11,6 @@ using Test
 @time @testset "Triangles" begin include("test_triangles.jl") end
 @time @testset "Tetrahedra" begin include("test_tetrahedra.jl") end
 
+@time @testset "Modification" begin include("test_modification.jl") end
 
 @time @testset "High-level" begin include("test_mesh.jl") end

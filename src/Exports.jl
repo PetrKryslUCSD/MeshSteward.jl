@@ -29,6 +29,10 @@ using ..MeshSteward: Q4blockx, Q4block, Q4quadrilateral, Q4blockwdistortion
 export Q4blockx, Q4block, Q4quadrilateral, Q4blockwdistortion
 
 ###############################################################################
+using ..MeshSteward: L2blockx, L2block
+export L2blockx, L2block
+
+###############################################################################
 using ..MeshSteward: import_MESH, import_NASTRAN, import_ABAQUS
 export import_MESH, import_NASTRAN, import_ABAQUS
 
