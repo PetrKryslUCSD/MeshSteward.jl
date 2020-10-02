@@ -163,7 +163,7 @@ function test()
     @test nshapes(c.left) == 4 * N ^ 2
     
     vtkwrite("mq4gen7", c)
-    # try rm("mq4gen7.vtu"); catch end
+    try rm("mq4gen7.vtu"); catch end
     # export_MESH("mq4gen7", connectivity)
     # try rm("mq4gen7.mesh"); catch end
     # try rm("mq4gen7-xyz.dat"); catch end

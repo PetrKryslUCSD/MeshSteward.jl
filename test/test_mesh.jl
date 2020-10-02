@@ -255,7 +255,7 @@ using MeshSteward: import_NASTRAN, vtkwrite
 using MeshSteward: Mesh, attach!, increl, basecode
 using Test
 function test()
-    connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+    connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
     connectivity = connectivities[1]
     mesh = Mesh()
     attach!(mesh, connectivity)
@@ -287,7 +287,7 @@ using MeshSteward: import_NASTRAN, vtkwrite, export_MESH
 using MeshSteward: Mesh, attach!, increl, load, basecode, nspacedims
 using Test
 function test()
-    connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+    connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
     connectivity = connectivities[1]
     mesh = Mesh()
     attach!(mesh, connectivity)
@@ -319,7 +319,7 @@ using MeshSteward: import_NASTRAN, vtkwrite, export_MESH
 using MeshSteward: Mesh, attach!, increl, load, basecode, nspacedims, save
 using Test
 function test()
-    connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+    connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
     connectivity = connectivities[1]
     mesh = Mesh()
     attach!(mesh, connectivity)
@@ -345,7 +345,7 @@ using MeshSteward: import_NASTRAN, vtkwrite
 using MeshCore: nshapes
 using Test
 function test()
-	connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+	connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
 	mesh = Mesh()
 	attach!(mesh, connectivities[1])
 	# vtkwrite("trunc_cyl_shell_0-elements", baseincrel(mesh))
@@ -363,7 +363,7 @@ using MeshSteward: Mesh, attach!, boundary
 using MeshSteward: summary
 using Test
 function test()
-	connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+	connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
 	connectivity = connectivities[1]
 	mesh = Mesh()
 	attach!(mesh, connectivity)
@@ -384,7 +384,7 @@ using MeshSteward: summary
 using MeshCore: nshapes
 using Test
 function test()
-    connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+    connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
     connectivity = connectivities[1]
     mesh = Mesh()
     attach!(mesh, connectivity)
@@ -407,7 +407,7 @@ using MeshSteward: summary, basecode, boundary, eselect, label, initbox, updateb
 using MeshCore: nshapes, attribute, ir_subset
 using Test
 function test()
-    connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+    connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
     connectivity = connectivities[1]
     mesh = Mesh()
     attach!(mesh, connectivity)
@@ -447,7 +447,7 @@ using MeshSteward: summary, basecode, boundary, eselect, label, initbox, updateb
 using MeshCore: nshapes, attribute, ir_subset, ir_code, nrelations
 using Test
 function test()
-    connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+    connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
     connectivity = connectivities[1]
     mesh = Mesh()
     attach!(mesh, connectivity)
@@ -494,7 +494,7 @@ using MeshCore: nshapes, attribute, ir_subset, ir_code, nrelations
 using MeshSteward.Exports
 using Test
 function test()
-    connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+    connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
     connectivity = connectivities[1]
     mesh = Mesh()
     attach!(mesh, connectivity)

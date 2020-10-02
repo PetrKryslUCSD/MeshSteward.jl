@@ -5,7 +5,7 @@ using MeshCore: nshapes
 using MeshSteward: import_NASTRAN
 using Test
 function test()
-    connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+    connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
     @test length(connectivities) == 1
     connectivity = connectivities[1]
     @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (376, 996)
@@ -22,7 +22,7 @@ using MeshCore: attribute, nrelations, ir_skeleton
 using MeshSteward: import_NASTRAN, vtkwrite
 using Test
 function test()
-    connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+    connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
     @test length(connectivities) == 1
     connectivity = connectivities[1]
     @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (376, 996)
@@ -48,7 +48,7 @@ using MeshCore: attribute, nrelations, ir_skeleton
 using MeshSteward: import_NASTRAN, vtkwrite
 using Test
 function test()
-    connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+    connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
     @test length(connectivities) == 1
     connectivity = connectivities[1]
     @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (376, 996)
@@ -74,7 +74,7 @@ using MeshCore: attribute, nrelations, ir_boundary
 using MeshSteward: import_NASTRAN, vtkwrite
 using Test
 function test()
-    connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+    connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
     @test length(connectivities) == 1
     connectivity = connectivities[1]
     @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (376, 996)
@@ -100,7 +100,7 @@ using MeshCore: attribute, nrelations, ir_boundary
 using MeshSteward: import_NASTRAN, vtkwrite
 using Test
 function test()
-    connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+    connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
     @test length(connectivities) == 1
     connectivity = connectivities[1]
     @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (376, 996)
@@ -126,7 +126,7 @@ using MeshCore: attribute, nrelations, ir_boundary
 using MeshSteward: import_MESH, vtkwrite, export_MESH
 using Test
 function test()
-    connectivities = import_MESH("q4-4-2.mesh")
+    connectivities = import_MESH(joinpath("data", "q4-4-2.mesh"))
     @test length(connectivities) == 1
     connectivity = connectivities[1]
     @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (15, 8)
@@ -158,7 +158,7 @@ using MeshSteward: import_NASTRAN, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
 using Test
 function test()
-    connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+    connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
     connectivity = connectivities[1]
     @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (376, 996)
     vertices = connectivity.right
@@ -193,7 +193,7 @@ using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
 using Test
 function test()
-    connectivities = import_ABAQUS("block-w-hole.inp")
+    connectivities = import_ABAQUS(joinpath("data", "block-w-hole.inp"))
     @test length(connectivities) == 1
     connectivity = connectivities[1]
     @test connectivity.left.name == "Q4"
@@ -230,7 +230,7 @@ using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
 using Test
 function test()
-    connectivities = import_ABAQUS("block-w-hole.inp")
+    connectivities = import_ABAQUS(joinpath("data", "block-w-hole.inp"))
     @test length(connectivities) == 1
     connectivity = connectivities[1]
     @test connectivity.left.name == "Q4"
@@ -256,7 +256,7 @@ using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
 using Test
 function test()
-    connectivities = import_ABAQUS("block-w-hole.inp")
+    connectivities = import_ABAQUS(joinpath("data", "block-w-hole.inp"))
     @test length(connectivities) == 1
     connectivity = connectivities[1]
     @test connectivity.left.name == "Q4"
@@ -284,7 +284,7 @@ using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
 using Test
 function test()
-    connectivities = import_ABAQUS("block-w-hole.inp")
+    connectivities = import_ABAQUS(joinpath("data", "block-w-hole.inp"))
     @test length(connectivities) == 1
     connectivity = connectivities[1]
     @test connectivity.left.name == "Q4"
@@ -313,7 +313,7 @@ using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
 using Test
 function test()
-    connectivities = import_ABAQUS("block-w-hole.inp")
+    connectivities = import_ABAQUS(joinpath("data", "block-w-hole.inp"))
     @test length(connectivities) == 1
     connectivity = connectivities[1]
     @test connectivity.left.name == "Q4"
@@ -343,7 +343,7 @@ using MeshSteward: import_ABAQUS, vtkwrite, export_MESH, import_MESH
 using LinearAlgebra
 using Test
 function test()
-    connectivities = import_ABAQUS("block-w-hole.inp")
+    connectivities = import_ABAQUS(joinpath("data", "block-w-hole.inp"))
     @test length(connectivities) == 1
     connectivity = connectivities[1]
     @test connectivity.left.name == "Q4"

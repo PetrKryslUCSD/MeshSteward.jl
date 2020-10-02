@@ -101,7 +101,7 @@ using MeshCore: attribute, nrelations, ir_skeleton, ir_boundary, ir_subset
 using MeshSteward: import_NASTRAN, vtkwrite, eselect
 using Test
 function test()
-    connectivities = import_NASTRAN("trunc_cyl_shell_0.nas")
+    connectivities = import_NASTRAN(joinpath("data", "trunc_cyl_shell_0.nas"))
     @test length(connectivities) == 1
     connectivity = connectivities[1]
     @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (376, 996)

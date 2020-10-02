@@ -60,7 +60,7 @@ using MeshSteward: L2blockx, gradedspace
 using Test
 function test()
     connectivity = L2blockx(gradedspace(0.0, 5.0, 7, 2))
-    @show (nshapes(connectivity.right), nshapes(connectivity.left))
+    # @show (nshapes(connectivity.right), nshapes(connectivity.left))
     @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (7, 6)
     vtkwrite("ml2gen3", connectivity)
     try rm("ml2gen3.vtu"); catch end
