@@ -14,18 +14,21 @@ function import_MESH(meshfile)
         ext = ".mesh"
     end
     meshfile = meshfilebase * ext
+    meshfiledir = dirname(meshfile)
     # Mesh file in the format of the FinEtools .mesh file
     datinfo = open(meshfile, "r") do file
         readdlm(file)
     end
     # The first line is the name of the file with the coordinates
-    X = open(datinfo[1], "r") do file
+    Xfile = isfile(datinfo[1]) ? datinfo[1] : joinpath(meshfiledir, datinfo[1])
+    X = open(Xfile, "r") do file
         readdlm(file, ' ', Float64)
     end
     # RAW: should be able to handle multiple shape sets.
     # The second line is the name of the shape descriptor.
     sd = SHAPE_DESC[datinfo[2]]
-    C = open(datinfo[3], "r") do file
+    Cfile = isfile(datinfo[3]) ? datinfo[3] : joinpath(meshfiledir, datinfo[3])
+    C = open(Cfile, "r") do file
         readdlm(file, ' ', Int64)
     end
 
