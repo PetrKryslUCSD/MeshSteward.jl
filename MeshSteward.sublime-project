@@ -2,10 +2,13 @@
 	"folders":
 	[
 		{
-			"path": "."
+			"path": ".",
 		},
 		{
-			"path": "C:\\Users\\PKrysl\\Documents\\work\\MeshCore.jl"
-		}
-	]
+			"path": "C:\\Users\\PetrKrysl\\Documents\\work\\MeshCore.jl"
+		},
+		{
+			"path": "C:\\Users\\PetrKrysl\\Documents\\work\\MeshCat.jl",
+		},
+	],
 }
