@@ -5,7 +5,7 @@
 
 # MeshSteward.jl
 
-Manages finite element meshes powered by MeshCore.jl
+Manages finite element meshes powered by [`MeshCore.jl`](https://github.com/PetrKryslUCSD/MeshCore.jl).
 
 ## Installation
 
