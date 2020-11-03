@@ -11,13 +11,17 @@ Select nodes using some criterion.
 - `v` = array of locations, one location per row
 - `kwargs` = pairs of keyword argument/value
 
-### distance
+# Selection criteria:
+
+## Distance from point
+
 ```
 list = selectnode(fens.xyz, distance=1.0+0.1/2^nref, from=[0. 0.],
         inflate=tolerance);
 ```
 
-### plane
+## Distance from a plane
+
 ```
 candidates = selectnode(fens, plane = [0.0 0.0 1.0 0.0], thickness = h/1000)
 ```
@@ -27,7 +31,8 @@ are selected they lie on the plane,  or near the plane within the
 distance `thickness` from the plane. The normal is assumed to be of unit
 length, if it isn't apply as such, it will be normalized internally.
 
-### nearestto
+## Nearest-to a point
+
 Find the node nearest to the location given.
 ```
 nh = selectnode(fens, nearestto = [R+Ro/2, 0.0, 0.0] )
