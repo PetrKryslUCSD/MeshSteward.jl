@@ -33,9 +33,27 @@ attach!(m, conn);
 ```
 
 We can now inspect the mesh by printing its summary.
+```
 println(summary(m))
+```
 
 ## How to visualize meshes
+
+The mesh can be exported for visualization. The tetrahedral elements are the
+base incidence relation of the mesh.
+
+```
+using MeshSteward: baseincrel
+using MeshSteward: vtkwrite
+vtkwrite("trunc_cyl_shell_0-elements", baseincrel(mesh))
+```
+
+Start "Paraview", load the file `"trunc_cyl_shell_0-elements.vtu"` and
+select for instance view as "Surface with Edges". The result will be a view
+of the surface of the tetrahedral mesh.
+```
+@async run(`paraview trunc_cyl_shell_0-elements.vtu`)
+```
 
 ## How to export and import meshes
 
