@@ -67,12 +67,17 @@ jobs:
             Pkg.instantiate()
             import Pkg; Pkg.add("Documenter")
             Pkg.status()
-            @info "After status"
             using Documenter: doctest
             using MeshCore
             using MeshSteward 
             doctest(MeshSteward)' 
-      - run: julia --project=docs docs/make.jl
+      - run: julia --project=docs -e '
+            using Pkg
+            Pkg.develop(PackageSpec(path=pwd()))
+            Pkg.activate(".")
+            Pkg.instantiate()
+            import Pkg; Pkg.add("Documenter")
+            docs/make.jl' 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
