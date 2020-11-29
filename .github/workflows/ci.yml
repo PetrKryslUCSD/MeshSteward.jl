@@ -61,10 +61,11 @@ jobs:
             Pkg.instantiate()'
       - run: |
           julia --project=docs -e '
-            import Pkg; Pkg.add("Documenter")
             using Pkg
             Pkg.develop(PackageSpec(path=pwd()))
             Pkg.instantiate()
+            Pkg.status()
+            import Pkg; Pkg.add("Documenter")
             using Documenter: doctest
             using MeshCore
             using MeshSteward 
