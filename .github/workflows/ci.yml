@@ -72,11 +72,11 @@ jobs:
             using MeshSteward 
             doctest(MeshSteward)' 
       - run: julia --project=docs -e '
-            using Pkg
-            Pkg.develop(PackageSpec(path=pwd()))
-            Pkg.activate(".")
-            Pkg.instantiate()
-            import Pkg; Pkg.add("Documenter")
+            using Pkg;
+            Pkg.develop(PackageSpec(path=pwd()));
+            Pkg.activate(".");
+            Pkg.instantiate();
+            import Pkg; Pkg.add("Documenter");
             include("docs/make.jl")            ' 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
