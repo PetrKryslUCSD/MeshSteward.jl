@@ -37,6 +37,28 @@ We can now inspect the mesh by printing its summary.
 println(summary(m))
 ```
 
+## How to find a particular incidence relation
+
+Find an incidence relation based on a code. 
+The ``(3, 0)`` incidence relation, which defines the tetrahedral elements in terms of the vertices at their corners, is found like this:
+```
+conn = increl(m, (3, 0))
+```
+
+We can extract the boundary of this incidence relation and attach it to the mesh:
+```
+using MeshCore: ir_boundary
+bconn = ir_boundary(conn)
+```
+This incidence relation than may be attached to the mesh, with a name and a code.
+```
+attach!(m, bconn, "boundary_triangles") 
+```
+To recover this incidence relation from the mesh we can do:
+```
+bconn = increl(m, ((2, 0), "boundary_triangles"))
+```
+
 ## How to visualize meshes
 
 The mesh can be exported for visualization. The tetrahedral elements are the
