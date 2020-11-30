@@ -2,13 +2,6 @@
 
 # How to Guide
 
-- [How to create simple meshes](@ref simplemeshes)
-- [How to find a particular incidence relation](@ref find)
-- [How to visualize meshes](@ref visualize)
-- [How to export meshes](@ref export)
-- [How to import meshes](@ref import)
-- [How to select entities](@ref select)
-
 ## [How to create simple meshes](@id simplemeshes)
 
 We will generate the tetrahedral mesh inside a rectangular block.
