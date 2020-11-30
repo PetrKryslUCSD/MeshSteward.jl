@@ -2,7 +2,7 @@
 
 # How to Guide
 
-## [How to create simple meshes](@id simplemeshes)
+## How to create simple meshes 
 
 We will generate the tetrahedral mesh inside a rectangular block.
 The block will have the dimensions shown below:
@@ -37,7 +37,7 @@ We can now inspect the mesh by printing its summary.
 println(summary(m))
 ```
 
-## [How to find a particular incidence relation](@id find)
+## How to find a particular incidence relation
 
 Find an incidence relation based on a code. 
 The ``(3, 0)`` incidence relation, which defines the tetrahedral elements in terms of the vertices at their corners, is found like this:
