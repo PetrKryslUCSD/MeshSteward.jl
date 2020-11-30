@@ -2,7 +2,14 @@
 
 # How to Guide
 
-## How to create simple meshes
+- [How to create simple meshes](simplemeshes)
+- [How to find a particular incidence relation](find)
+- [How to visualize meshes](visualize)
+- [How to export meshes](export)
+- [How to import meshes](import)
+- [How to select entities](select)
+
+## <a name="simplemeshes"></a>How to create simple meshes
 
 We will generate the tetrahedral mesh inside a rectangular block.
 The block will have the dimensions shown below:
@@ -37,7 +44,7 @@ We can now inspect the mesh by printing its summary.
 println(summary(m))
 ```
 
-## How to find a particular incidence relation
+## <a name="find"></a>How to find a particular incidence relation
 
 Find an incidence relation based on a code. 
 The ``(3, 0)`` incidence relation, which defines the tetrahedral elements in terms of the vertices at their corners, is found like this:
@@ -59,7 +66,7 @@ To recover this incidence relation from the mesh we can do:
 bconn = increl(m, ((2, 0), "boundary_triangles"))
 ```
 
-## How to visualize meshes
+## <a name="visualize"></a>How to visualize meshes
 
 The mesh can be exported for visualization. The tetrahedral elements are the
 base incidence relation of the mesh.
@@ -77,9 +84,9 @@ of the surface of the tetrahedral mesh.
 @async run(`paraview trunc_cyl_shell_0-elements.vtu`)
 ```
 
-## How to export and import meshes
+## <a name="export"></a>How to export meshes |> 
+## <a name="import"></a>How to import meshes |> 
 
-## How to manipulate topology
 
-## How to select entities
+## <a name="select"></a>How to select entities
 
