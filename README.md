@@ -1,6 +1,6 @@
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Build status](https://github.com/PetrKryslUCSD/MeshSteward.jl/workflows/CI/badge.svg)](https://github.com/PetrKryslUCSD/MeshSteward.jl/actions)
-[![Coverage Status](https://coveralls.io/repos/github/PetrKryslUCSD/MeshSteward.jl/badge.svg?branch=master)](https://coveralls.io/github/PetrKryslUCSD/MeshSteward.jl?branch=master)
+[![Codecov](https://codecov.io/gh/PetrKryslUCSD/MeshSteward.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/PetrKryslUCSD/MeshSteward.jl)
 [![Latest documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://petrkryslucsd.github.io/MeshSteward.jl/dev)
 
 # MeshSteward.jl
