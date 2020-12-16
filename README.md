@@ -35,6 +35,7 @@ Please refer to the tutorials in the package [`MeshTutor.jl`](https://github.com
 
 ## News
 
+- 12/15/2020: Tested with Julia 1.6.
 - 07/06/2020: Exports have been added to facilitate use of the library.
 - 06/17/2020: Key the stored relations with a tuple consisting of the code and a
   string tag.
