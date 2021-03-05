@@ -1,6 +1,8 @@
 import Base.cat
 using DelimitedFiles
 using WriteVTK
+using SparseArrays
+using SymRCM
 using MeshCore: AbsShapeDesc, P1, L2, T3, Q4, T4, H8
 using MeshCore: VecAttrib
 using MeshCore: shapedesc, nshapes,  IncRel
@@ -46,15 +48,15 @@ Compute the new numbering obtained by deleting unconnected vertices.
 """
 function vnewnumbering(ir, isconnected)
     @_check length(isconnected) == nshapes(ir.right)
-    new_numbering = fill(zero(indextype(ir)), nshapes(ir.right));
+    p = fill(zero(indextype(ir)), nshapes(ir.right));
     id = 1;
     for i in 1:length(isconnected)
         if (isconnected[i])
-            new_numbering[i] = id;
+            p[i] = id;
             id = id+1;
         end
     end
-    return new_numbering
+    return p
 end
 
 """
@@ -241,13 +243,13 @@ function withvertices(ir, locs)
 end
 
 """
-    renumbered(ir, new_numbering)
+    renumbered(ir, p)
 
 Renumber the connectivity of the shapes based on a new numbering for the
 vertices.
 
-- `new_numbering` = new serial numbers for the vertices.  The connectivity
-          should be changed as `conn[j]` --> `new_numbering[conn[j]]`
+- `p` = new serial numbers for the vertices.  The connectivity
+          should be changed as `conn[j]` --> `p[conn[j]]`
 
 Returns new incidence relation with renumbered connectivity.
 
@@ -258,20 +260,20 @@ Let us say there are nodes not connected to any finite element that you would
 like to remove from the mesh: here is how that would be accomplished.
 ```
 connected = findunconnnodes(fens, fes);
-fens, new_numbering = compactfens(fens, connected);
-fes = renumberconn!(fes, new_numbering);
+fens, p = compactfens(fens, connected);
+fes = renumberconn!(fes, p);
 ```
 Finally, check that the mesh is valid:
 ```julia
 validate_mesh(fens, fes);
 ```
 """
-function renumbered(ir, new_numbering)
+function renumbered(ir, p)
     N = nentities(ir, 1)
     C = SVector{N, indextype(ir)}[]
     for i in 1:nrelations(ir)
         c = ir[i]
-        push!(C, SVector{N}(new_numbering[c]))
+        push!(C, SVector{N}(p[c]))
     end
     locs = ir.right.attributes["geom"]
     vertices = ShapeColl(P1, length(locs), "vertices")
@@ -325,4 +327,40 @@ function mergeirs(conn1, conn2, tolerance = eps())
     conn2 = withvertices(conn2, nlocs1)
     conn1 = renumbered(conn1, ni1)
     return cat(conn1, conn2)
+end
+
+"""
+    minimize_profile(conn)
+
+Re-number the vertices so that the profile can be minimized.
+
+# Output
+
+Renumbered incidence relation.
+"""
+function minimize_profile(conn)
+    I = fill(zero(Int), 0)
+    J = fill(zero(Int), 0)
+    for k in 1:nrelations(conn)
+        ne = nentities(conn, k)
+        for j in 1:ne
+            for i in 1:ne
+                push!(I, conn[k, i])
+                push!(J, conn[k, j])
+            end
+        end
+    end
+    V = fill(1.0, length(I))
+    S = sparse(I, J, V, nshapes(conn.right), nshapes(conn.right))
+    # find the new numbering (permutation)
+    p = symrcm(S)
+    # number the vertices of the shapes on the left using the new permutation
+    conn = renumbered(conn, p)
+    # reorder the vertices attribute
+    ip = similar(p) # inverse permutation
+    ip[p] = 1:length(p)
+    locs = conn.right.attributes["geom"]
+    newlocs = VecAttrib([locs[k] for k in ip])
+    conn.right.attributes["geom"] = newlocs
+    return conn
 end

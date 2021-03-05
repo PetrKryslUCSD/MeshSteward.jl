@@ -135,3 +135,24 @@ end
 end
 using .mmodt6gen7
 mmodt6gen7.test()
+
+module mt4symrcm1a
+using StaticArrays
+using MeshCore.Exports
+using MeshSteward.Exports 
+using Test
+function test()
+    # connectivity = T4block(1.0, 2.0, 3.0, 1, 1, 1, :a)
+    connectivity = T4block(1.0, 2.0, 3.0, 7, 9, 13, :a)
+    # @show (nshapes(connectivity.right), nshapes(connectivity.left))
+    # @test (nshapes(connectivity.right), nshapes(connectivity.left)) == (1120, 4914)
+    
+    connectivity = minimize_profile(connectivity)
+    
+    vtkwrite("mt4symrcm1a", connectivity)
+    try rm("mt4symrcm1a.vtu"); catch end
+    true
+end
+end
+using .mt4symrcm1a
+mt4symrcm1a.test()
