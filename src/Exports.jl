@@ -41,8 +41,8 @@ using ..MeshSteward: vtkwrite, export_MESH
 export vtkwrite, export_MESH
 
 ###############################################################################
-using ..MeshSteward: transform, vconnected, vnewnumbering, compactify, fusevertices, withvertices, renumbered, cat, mergeirs
-export transform, vconnected, vnewnumbering, compactify, fusevertices, withvertices, renumbered, cat, mergeirs
+using ..MeshSteward: transform, vconnected, vnewnumbering, compactify, fusevertices, withvertices, renumbered, cat, mergeirs, minimize_profile
+export transform, vconnected, vnewnumbering, compactify, fusevertices, withvertices, renumbered, cat, mergeirs, minimize_profile
 
 ###############################################################################
 using ..MeshSteward: Mesh
