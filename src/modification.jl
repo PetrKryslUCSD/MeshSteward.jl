@@ -343,10 +343,10 @@ function minimize_profile(conn)
     J = fill(zero(Int), 0)
     for k in 1:nrelations(conn)
         ne = nentities(conn, k)
-        for j in 1:ne
-            for i in 1:ne
-                push!(I, conn[k, i])
-                push!(J, conn[k, j])
+        for i in 1:ne
+            append!(I, conn[k])
+            for m in 1:ne
+                push!(J, conn[k, i])
             end
         end
     end
