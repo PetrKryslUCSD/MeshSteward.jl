@@ -341,6 +341,7 @@ Renumbered incidence relation.
 function minimize_profile(conn)
     I = fill(zero(Int), 0)
     J = fill(zero(Int), 0)
+    sizehint!(I, nshapes(conn.right))
     for k in 1:nrelations(conn)
         ne = nentities(conn, k)
         for i in 1:ne
@@ -356,7 +357,7 @@ function minimize_profile(conn)
     p = symrcm(S)
     # number the vertices of the shapes on the left using the new permutation
     conn = renumbered(conn, p)
-    # reorder the vertices attribute
+    # reorder the vertices attribute: the order of the vertices changed
     ip = similar(p) # inverse permutation
     ip[p] = 1:length(p)
     locs = conn.right.attributes["geom"]
