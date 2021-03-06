@@ -9,6 +9,8 @@ using MeshCore: shapedesc, nshapes,  IncRel
 using MeshCore: ShapeColl
 using LinearAlgebra: norm
 
+# using UnicodePlots # 4 debugging only
+
 """
     transform(ir, T = x -> x)
 
@@ -353,8 +355,10 @@ function minimize_profile(conn)
     end
     V = fill(1.0, length(I))
     S = sparse(I, J, V, nshapes(conn.right), nshapes(conn.right))
+    # display(spy(S))
     # find the new numbering (permutation)
     p = symrcm(S)
+    # display(spy(S[p, p]))
     # number the vertices of the shapes on the left using the new permutation
     conn = renumbered(conn, p)
     # reorder the vertices attribute: the order of the vertices changed
