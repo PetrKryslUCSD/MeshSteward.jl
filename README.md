@@ -9,6 +9,8 @@ Manages finite element meshes powered by [`MeshCore.jl`](https://github.com/Petr
 
 ## Installation
 
+This release is for Julia 1.5.
+
 The package is registered: doing
 ```
 ]add MeshSteward
