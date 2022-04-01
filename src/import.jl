@@ -4,9 +4,7 @@
 Import vertices and shapes in the MESH format.
 
 # Output
-Data dictionary, with keys
-- "`vertices`" (vertices),
-- "`shapes`" (array of shape collections).
+Array of incidence relations.
 """
 function import_MESH(meshfile)
     meshfilebase, ext = splitext(meshfile)
@@ -49,7 +47,7 @@ end
     large, the CHUNK should be probably increased so that only a few reallocations
     are needed.
 """
-const CHUNK = 1000
+const CHUNK = 100000
 
 
 # Fix up an old style floating-point number without the exponent letter.
@@ -79,9 +77,7 @@ Limitations:
 Some fixed-format files can also be processed (large-field, but not small-field).
 
 # Output
-Data dictionary, with keys
-- "`vertices`" (vertices),
-- "`shapes`" (array of shape collections).
+Array of incidence relations.
 """
 function import_NASTRAN(filename; allocationchunk=CHUNK, expectfixedformat = false)
     lines = readlines(filename)
@@ -219,9 +215,7 @@ Limitations:
     are handled.
 
 # Output
-Data dictionary, with keys
-- "`fens`" (finite element nodes),
-- "`fesets`" (array of finite element sets).
+Array of incidence relations.
 """
 function import_ABAQUS(filename; allocationchunk=CHUNK)
     lines = readlines(filename)
@@ -348,6 +342,8 @@ function import_ABAQUS(filename; allocationchunk=CHUNK)
                 #     return FESetT3(elemset1.elem[:, 2:4])
                 elseif (length(TYPE) >= 5) && ((TYPE[1:5] == "CPS4R") || (TYPE[1:4] == "CPS4"))
                     return (Q4, elemset1.elem[:, 2:5])
+                elseif (length(TYPE) >= 2) && (TYPE[1:2] == "S3") 
+                    return (T3, elemset1.elem[:, 2:4])
                 else
                     return nothing, nothing
                 end

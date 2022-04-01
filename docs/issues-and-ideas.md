@@ -10,3 +10,8 @@ DocumenterTools.genkeys(user="PetrKryslUCSD", repo="git@github.com:PetrKryslUCSD
 and follow the instructions to install the keys.
 
 - Export method could take just the mesh. How do we handle multiple element types in the mesh? That would mean multiple connectivity incidence relations.
+
+- Import methods needs to be documented: outputs are incorrectly described.
+
+- Import mesh in the .h5mesh format.
+- 
