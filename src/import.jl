@@ -320,9 +320,6 @@ function import_ABAQUS(filename; allocationchunk=CHUNK)
     # Nodes
     xyz = node[:,2:4]
     
-    # Element sets
-    connectivities = IncRel[]
-
     function feset_construct(elemset1)
         temp = uppercase(strip(elemset1.ElementLine))
         b  = split(temp, ",")
@@ -357,6 +354,9 @@ function import_ABAQUS(filename; allocationchunk=CHUNK)
     vrts = ShapeColl(P1, length(locs), "vertices")
     vrts.attributes["geom"] = locs
     
+    # Element sets
+    connectivities = IncRel[]
+
     for ixxxx = 1:length(elemset)
         elemset[ixxxx].elem = elemset[ixxxx].elem[1:elemset[ixxxx].nelem, :]
         fet, conn = feset_construct(elemset[ixxxx])
