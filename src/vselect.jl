@@ -45,7 +45,7 @@ function _box_outputlist!(outputlist::Vector{IT}, abox::BT, sdim::IT, v::VT) whe
     # Helper functions
     @inline inrange(rangelo,rangehi,x) = (rangelo <= x <= rangehi)
     nn = 0
-    for j in 1:length(v)
+    for j in eachindex(v)
         matches = true
         for i in 1:sdim
             if !inrange(abox[2*i-1], abox[2*i], v[j][i])
@@ -59,10 +59,10 @@ function _box_outputlist!(outputlist::Vector{IT}, abox::BT, sdim::IT, v::VT) whe
     return outputlist, nn
 end
 
-function _distance_outputlist!(outputlist::Vector{IT}, d, fromvalue, sdim::IT, v::VT) where {IT, BT, VT}
+function _distance_outputlist!(outputlist::Vector{IT}, d, fromvalue, sdim::IT, v::VT) where {IT, VT}
     # Helper functions
     nn = 0
-    for j in 1:length(v)
+    for j in eachindex(v)
         if norm(fromvalue-v[j]) < d
             nn = nn + 1; outputlist[nn] = j;
         end
@@ -70,10 +70,10 @@ function _distance_outputlist!(outputlist::Vector{IT}, d, fromvalue, sdim::IT, v
     return outputlist, nn
 end
 
-function _plane_outputlist!(outputlist::Vector{IT}, distance, normal, t, sdim::IT, v::VT) where {IT, BT, VT}
+function _plane_outputlist!(outputlist::Vector{IT}, distance, normal, t, sdim::IT, v::VT) where {IT, VT}
     # Helper functions
     nn = 0
-    for j in 1:length(v)
+    for j in eachindex(v)
         ad = dot(v[j], normal);
         if abs(distance-ad)<t
             nn = nn + 1; outputlist[nn] = j;
@@ -82,9 +82,9 @@ function _plane_outputlist!(outputlist::Vector{IT}, distance, normal, t, sdim::I
     return outputlist, nn
 end
 
-function _nearestto_outputlist!(outputlist::Vector{IT}, nearestto, sdim::IT, v::VT) where {IT, BT, VT}
+function _nearestto_outputlist!(outputlist::Vector{IT}, nearestto, sdim::IT, v::VT) where {IT, VT}
     distances =  fill(0.0, length(v));
-    for j in 1:length(v)
+    for j in eachindex(v)
         distances[j] = norm(nearestto-v[j])
     end
     Mv,j = findmin(distances)
